@@ -1,0 +1,3 @@
+creating new nano file
+created new project for costa rican glass analysis for Dr. Molly McCanta
+uploaded data sheet and packages for dbplyr and tidyverse
