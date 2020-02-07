@@ -1,3 +1,6 @@
 creating new nano file
 created new project for costa rican glass analysis for Dr. Molly McCanta
 uploaded data sheet and packages for dbplyr and tidyverse
+created dataframes for each rock and created column for rock name
+joined all dataframes together back into one dataframe that now has a rockname
+column and moved that to the first column in df
