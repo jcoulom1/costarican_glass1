@@ -4,3 +4,6 @@ uploaded data sheet and packages for dbplyr and tidyverse
 created dataframes for each rock and created column for rock name
 joined all dataframes together back into one dataframe that now has a rockname
 column and moved that to the first column in df
+Added a new branch to work on tas diagram (which I got from a website here:
+https://stackoverflow.com/questions/53918035/use-a-diagram-as-background-template-in-a-plot
+now I am working on adding data I already created to tas diagram
