@@ -39,6 +39,12 @@ alkali_plot <- ggplot(rock_data, aes(x = SiO2, y = Na2O + K2O)) +
   geom_smooth()
 alkali_plot
 
+alkali_plot2 <- ggplot(rock_data, aes(x = SiO2, y = Na2O + K2O)) +
+  geom_point() +
+  legend("topright", rock_data$RockName, legend = c("CR1A", "CR1B", "CR2A", "CR2B", "CR3", "CR4", "CR5")) col = 1:7)
+alkali_plot2
+
+#colour = ("CR1A" = "red", "CR1B" = "blue", "CR2A" = "orange", "CR2B" = "yellow", "CR3" = "pink", "CR4" = "purple", "CR5" = "green")
 
 #create TAS plot to show data on
 #create blank dataframe for tas plot
@@ -82,7 +88,7 @@ tas <- p + annotate("text", label = "Basalt", x = 48.5, y = 2, size=4)+
   annotate("text", label = "Dacite", x = 67.5, y = 4.2, size=4)+
   annotate("text", label = "Rhyolite", x = 75, y = 7, size=4)+
   annotate("text", label = "Trachy- \n basalt", x = 48.8, y = 5.7, size=4)+
-  annotate("text", label = "Basaltic \n trachy- \n andesite", x = 52.5, y = 7, size=4)+
+  annotate("text", label = "Basaltic \n trachy- \n andesite", x = 53, y = 7, size=4)+
   annotate("text", label = "Trachy- \n andesite", x = 57.8, y = 8.2, size=4)+
   annotate("text", label = "Trachydacite", x = 65, y = 9, size=4)+
   annotate("text", label = "Trachyte", x = 62.5, y = 11.5, size=4)+
@@ -94,3 +100,15 @@ tas <- p + annotate("text", label = "Basalt", x = 48.5, y = 2, size=4)+
   annotate("text", label = "Phonolite", x = 57, y = 14, size=4)+
   annotate("text", label = "Foidite", x = 45, y = 12, size=4)
 tas
+
+alkali_tas <- tas + ggplot()
+
+#can I plot them together?
+alkali_cr1a <- geom_point(rock_cr1a, mapping = aes(x = SiO2, y = Na2O + K2O), colour = "red")
+alkali_cr1b <- geom_point(rock_cr1b, mapping = aes(x = SiO2, y = Na2O + K2O), colour = "blue")
+alkali_cr2a <- geom_point(rock_cr2a, mapping = aes(x = SiO2, y = Na2O + K2O), colour = "orange")
+alkali_cr2b <- geom_point(rock_cr2b, mapping = aes(x = SiO2, y = Na2O + K2O), colour = "yellow")
+alkali_cr3 <- geom_point(rock_cr3, mapping = aes(x = SiO2, y = Na2O + K2O), colour = "pink")
+alkali_cr4 <- geom_point(rock_cr4, mapping = aes(x = SiO2, y = Na2O + K2O), colour = "purple")
+alkali_cr5 <- geom_point(rock_cr5, mapping = aes(x = SiO2, y = Na2O + K2O), colour = "green")
+tas + theme(legend.position = c(.95, .95), legend.justification = c("right", "top")) + alkali_cr1a + alkali_cr1b + alkali_cr2a + alkali_cr2b + alkali_cr3 + alkali_cr4 + alkali_cr5

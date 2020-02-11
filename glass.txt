@@ -7,3 +7,6 @@ column and moved that to the first column in df
 Added a new branch to work on tas diagram (which I got from a website here:
 https://stackoverflow.com/questions/53918035/use-a-diagram-as-background-template-in-a-plot
 now I am working on adding data I already created to tas diagram
+Many updates made - tas diagram works and alkali plot works but cannot lay
+them on top of each other neatly - messy way of each individual included
+Also did not commit push there...moved on to creating next plot of SiO2 vs MgO
