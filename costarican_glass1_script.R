@@ -125,5 +125,44 @@ alkali_cr5 <- geom_point(rock_cr5, mapping = aes(x = SiO2, y = Na2O + K2O), colo
 tas + alkali_cr1a + alkali_cr1b + alkali_cr2a + alkali_cr2b + alkali_cr3 + alkali_cr4 + alkali_cr5
 ##yes but bulky - would like more elegant solution
 
+#plot sio2 vs mg
+mg_plot <- rock_data %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(SiO2, MgO, colour = RockName)) +
+  geom_point() +
+  geom_smooth(aes(group = 1))
+mg_plot <- mg_plot + guides(color = guide_legend(override.aes = list(size = 4)))
+mg_plot
+
+mg_plot + scale_x_continuous(name = "SiO2", limits = c(50, 80))
+
+
+#plot sio2 vs al
+al_plot <- rock_data %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(SiO2, Al2O3, colour = RockName)) +
+  geom_point() +
+  geom_smooth(aes(group = 1))
+al_plot <- al_plot + guides(color = guide_legend(override.aes = list(size = 4)))
+al_plot
+
+#plot sio2 vs feo
+fe_plot <- rock_data %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(SiO2, FeO, colour = RockName)) +
+  geom_point() +
+  geom_smooth(aes(group = 1))
+fe_plot <- fe_plot + guides(color = guide_legend(override.aes = list(size = 4)))
+fe_plot
+
+#plot sio2 vs tio2
+ti_plot <- rock_data %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(SiO2, TiO2, colour = RockName)) +
+  geom_point() +
+  geom_smooth(aes(group = 1))
+ti_plot <- ti_plot + guides(color = guide_legend(override.aes = list(size = 4)))
+ti_plot
+
 
 

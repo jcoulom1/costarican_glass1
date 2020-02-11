@@ -1,0 +1,35 @@
+[33mcommit cc398430966fc3b7db780c94f3bc5a4cab4998bb[m[33m ([m[1;36mHEAD -> [m[1;32mtas[m[33m, [m[1;31morigin/tas[m[33m)[m
+Author: Julie M. Coulombe <jcoulom1@vols.utk.edu>
+Date:   Tue Feb 11 10:47:44 2020 -0500
+
+    commit updated saved document with tas diagrams
+
+[33mcommit e3ef1a801230309db2db8e901202b63ac41257fa[m
+Author: Julie M. Coulombe <jcoulom1@vols.utk.edu>
+Date:   Tue Feb 11 10:26:26 2020 -0500
+
+    brought tas and alkali forward and created MgO plot
+
+[33mcommit 34f2e0bd826d84bfc7f472bc13e54f26833f8417[m
+Author: Julie M. Coulombe <jcoulom1@vols.utk.edu>
+Date:   Fri Feb 7 11:56:37 2020 -0500
+
+    used code from source to plot tas diagram and tweaked
+
+[33mcommit e170e6dc8cbdbb329ecfeb15573f1cfae0165d04[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m
+Author: Julie M. Coulombe <jcoulom1@vols.utk.edu>
+Date:   Fri Feb 7 10:25:17 2020 -0500
+
+    created one dataframe with all bulk rocks listed
+
+[33mcommit 89bff3e415e785d5a1c000cabea2e682a6c978cf[m
+Author: Julie M. Coulombe <jcoulom1@vols.utk.edu>
+Date:   Thu Feb 6 12:22:48 2020 -0500
+
+    Added data sheet and appropriate libraries
+
+[33mcommit 50c31b4237cefebef6bbb2e396eb28ed815bca5b[m
+Author: jcoulom1 <56698841+jcoulom1@users.noreply.github.com>
+Date:   Thu Feb 6 11:58:19 2020 -0500
+
+    Initial commit
