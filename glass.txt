@@ -10,3 +10,5 @@ now I am working on adding data I already created to tas diagram
 Many updates made - tas diagram works and alkali plot works but cannot lay
 them on top of each other neatly - messy way of each individual included
 Also did not commit push there...moved on to creating next plot of SiO2 vs MgO
+forgot to save document before pushing, redoing tas info
+

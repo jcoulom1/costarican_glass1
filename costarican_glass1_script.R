@@ -31,6 +31,7 @@ rock_cr5 <- cr_data %>%
   mutate("RockName" = "CR5")
 rock_data <- rbind(rock_cr1a, rock_cr1b, rock_cr2a, rock_cr2b, rock_cr3, rock_cr4, rock_cr5)
 rock_data <- rock_data[,c(17, 2:16)]
+rock_data$RockName <- as.factor(rock_data$RockName)
 
 #Start to work on plots - SiO2 vs Na2O + K2O
 alkali_plot <- ggplot(rock_data, aes(x = SiO2, y = Na2O + K2O)) +
@@ -41,7 +42,7 @@ alkali_plot
 
 alkali_plot2 <- ggplot(rock_data, aes(x = SiO2, y = Na2O + K2O)) +
   geom_point() +
-  legend("topright", rock_data$RockName, legend = c("CR1A", "CR1B", "CR2A", "CR2B", "CR3", "CR4", "CR5")) col = 1:7)
+  
 alkali_plot2
 
 #colour = ("CR1A" = "red", "CR1B" = "blue", "CR2A" = "orange", "CR2B" = "yellow", "CR3" = "pink", "CR4" = "purple", "CR5" = "green")
@@ -101,9 +102,19 @@ tas <- p + annotate("text", label = "Basalt", x = 48.5, y = 2, size=4)+
   annotate("text", label = "Foidite", x = 45, y = 12, size=4)
 tas
 
-alkali_tas <- tas + ggplot()
+#plot alkali by rock name
+final_alkplot <- rock_data %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(x = SiO2, y = Na2O + K2O, colour = RockName)) +
+  geom_point()
+final_alkplot
 
-#can I plot them together?
+tas + final_alkplot ##this gives an error message
+
+###ASK DREW FOR HELP HERE - cAN'T GROUP TOGETHER USING GGPLOT, CAN'T
+###USE GROUP_BY IN GEOM_POINT HOW CAN I COMBINE MORE EFFICIENTLY TO GET LEGEND?
+
+#can I plot them together without group_by?
 alkali_cr1a <- geom_point(rock_cr1a, mapping = aes(x = SiO2, y = Na2O + K2O), colour = "red")
 alkali_cr1b <- geom_point(rock_cr1b, mapping = aes(x = SiO2, y = Na2O + K2O), colour = "blue")
 alkali_cr2a <- geom_point(rock_cr2a, mapping = aes(x = SiO2, y = Na2O + K2O), colour = "orange")
@@ -111,4 +122,8 @@ alkali_cr2b <- geom_point(rock_cr2b, mapping = aes(x = SiO2, y = Na2O + K2O), co
 alkali_cr3 <- geom_point(rock_cr3, mapping = aes(x = SiO2, y = Na2O + K2O), colour = "pink")
 alkali_cr4 <- geom_point(rock_cr4, mapping = aes(x = SiO2, y = Na2O + K2O), colour = "purple")
 alkali_cr5 <- geom_point(rock_cr5, mapping = aes(x = SiO2, y = Na2O + K2O), colour = "green")
-tas + theme(legend.position = c(.95, .95), legend.justification = c("right", "top")) + alkali_cr1a + alkali_cr1b + alkali_cr2a + alkali_cr2b + alkali_cr3 + alkali_cr4 + alkali_cr5
+tas + alkali_cr1a + alkali_cr1b + alkali_cr2a + alkali_cr2b + alkali_cr3 + alkali_cr4 + alkali_cr5
+##yes but bulky - would like more elegant solution
+
+
+
