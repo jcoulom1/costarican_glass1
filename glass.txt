@@ -12,4 +12,6 @@ them on top of each other neatly - messy way of each individual included
 Also did not commit push there...moved on to creating next plot of SiO2 vs MgO
 forgot to save document before pushing, redoing tas info
 added plots for SiO2 vs MgO, Al2O3, FeO and TiO2
+Saw Drew and made some cosmetic changes to way plots are run.  Added an 
+Rmarkdown file so plots will be able to publish for review by Molly
 

@@ -7,7 +7,8 @@ cr_data <- read.csv("data/costa_rican_data2.csv")
 library(dbplyr)
 library(tidyverse)
 
-#create new column to sort by bulk rocks
+#create new column to sort by bulk rocks into a column for rockname
+
 rock_cr1a <- cr_data %>%
    filter(grepl("CR1A", cr_data$Name)) %>%
   mutate("RockName" = "CR1A")
@@ -33,21 +34,15 @@ rock_data <- rbind(rock_cr1a, rock_cr1b, rock_cr2a, rock_cr2b, rock_cr3, rock_cr
 rock_data <- rock_data[,c(17, 2:16)]
 rock_data$RockName <- as.factor(rock_data$RockName)
 
-#Start to work on plots - SiO2 vs Na2O + K2O
+#Start to work on plots - SiO2 vs Na2O + K2O for all rocks
 alkali_plot <- ggplot(rock_data, aes(x = SiO2, y = Na2O + K2O)) +
   facet_wrap(vars(RockName)) + 
   geom_point() +
   geom_smooth()
 alkali_plot
 
-alkali_plot2 <- ggplot(rock_data, aes(x = SiO2, y = Na2O + K2O)) +
-  geom_point() +
-  
-alkali_plot2
 
-#colour = ("CR1A" = "red", "CR1B" = "blue", "CR2A" = "orange", "CR2B" = "yellow", "CR3" = "pink", "CR4" = "purple", "CR5" = "green")
-
-#create TAS plot to show data on
+#create TAS plot to create background for data layer
 #create blank dataframe for tas plot
 d = data.frame(x = c(40, 80), y = c(0,15))
 
@@ -109,21 +104,11 @@ final_alkplot <- rock_data %>%
   geom_point()
 final_alkplot
 
-tas + final_alkplot ##this gives an error message
 
-###ASK DREW FOR HELP HERE - cAN'T GROUP TOGETHER USING GGPLOT, CAN'T
-###USE GROUP_BY IN GEOM_POINT HOW CAN I COMBINE MORE EFFICIENTLY TO GET LEGEND?
+# use rock_data to add points to the tas diagram
+tas +
+  geom_point(data = rock_data, aes(x = SiO2, y = Na2O + K2O, colour = RockName))
 
-#can I plot them together without group_by?
-alkali_cr1a <- geom_point(rock_cr1a, mapping = aes(x = SiO2, y = Na2O + K2O), colour = "red")
-alkali_cr1b <- geom_point(rock_cr1b, mapping = aes(x = SiO2, y = Na2O + K2O), colour = "blue")
-alkali_cr2a <- geom_point(rock_cr2a, mapping = aes(x = SiO2, y = Na2O + K2O), colour = "orange")
-alkali_cr2b <- geom_point(rock_cr2b, mapping = aes(x = SiO2, y = Na2O + K2O), colour = "yellow")
-alkali_cr3 <- geom_point(rock_cr3, mapping = aes(x = SiO2, y = Na2O + K2O), colour = "pink")
-alkali_cr4 <- geom_point(rock_cr4, mapping = aes(x = SiO2, y = Na2O + K2O), colour = "purple")
-alkali_cr5 <- geom_point(rock_cr5, mapping = aes(x = SiO2, y = Na2O + K2O), colour = "green")
-tas + alkali_cr1a + alkali_cr1b + alkali_cr2a + alkali_cr2b + alkali_cr3 + alkali_cr4 + alkali_cr5
-##yes but bulky - would like more elegant solution
 
 #plot sio2 vs mg
 mg_plot <- rock_data %>%
@@ -158,11 +143,18 @@ fe_plot
 #plot sio2 vs tio2
 ti_plot <- rock_data %>%
   group_by(RockName) %>%
-  ggplot(mapping = aes(SiO2, TiO2, colour = RockName)) +
+  ggplot(mapping = aes(SiO2, TiO2, color = RockName)) +
   geom_point() +
   geom_smooth(aes(group = 1))
 ti_plot <- ti_plot + guides(color = guide_legend(override.aes = list(size = 4)))
 ti_plot
 
-
+#plot sio2 vs cao
+ca_plot <- rock_data %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(SiO2, CaO, color = RockName)) +
+  geom_point() +
+  geom_smooth(aes(group = 1))
+ca_plot <- ca_plot + guides(color = guide_legend(override.aes = list(size = 4)))
+ca_plot
 
