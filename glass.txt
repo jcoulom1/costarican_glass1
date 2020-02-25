@@ -4,3 +4,14 @@ uploaded data sheet and packages for dbplyr and tidyverse
 created dataframes for each rock and created column for rock name
 joined all dataframes together back into one dataframe that now has a rockname
 column and moved that to the first column in df
+Added a new branch to work on tas diagram (which I got from a website here:
+https://stackoverflow.com/questions/53918035/use-a-diagram-as-background-template-in-a-plot
+now I am working on adding data I already created to tas diagram
+Many updates made - tas diagram works and alkali plot works but cannot lay
+them on top of each other neatly - messy way of each individual included
+Also did not commit push there...moved on to creating next plot of SiO2 vs MgO
+forgot to save document before pushing, redoing tas info
+added plots for SiO2 vs MgO, Al2O3, FeO and TiO2
+Saw Drew and made some cosmetic changes to way plots are run.  Added an 
+Rmarkdown file so plots will be able to publish for review by Molly
+
