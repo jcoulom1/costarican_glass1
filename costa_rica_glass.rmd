@@ -1,14 +1,19 @@
-#####
-##Begin Costa Rica Glass project
-#####
+---
+title: "Costa Rica Glass"
+author: "Julie M. Coulombe"
+date: "2/25/2020"
+output: rmarkdown::github_document
+---
 
-##Load data and packages
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 cr_data <- read.csv("data/probe_data_molly.csv")
 library(dbplyr)
 library(tidyverse)
+```
 
-#create new column to sort by bulk rocks into a column for rockname
-
+Create a new column to sort by bulk rocks into a column for Rockname
+```{r selection, include=FALSE}
 rock_cr1a <- cr_data %>%
    filter(grepl("CR1A", cr_data$Comment)) %>%
   mutate("RockName" = "CR1A")
@@ -33,35 +38,62 @@ rock_cr5 <- cr_data %>%
 rock_cr7 <- cr_data %>%
   filter(grepl("CR7", cr_data$Comment)) %>%
   mutate("RockName" = "CR7")
-rock_data <- rbind(rock_cr1a, rock_cr1b, rock_cr2a, rock_cr2b, rock_cr3, rock_cr4, rock_cr5)
+rock_data <- rbind(rock_cr1a, rock_cr1b, rock_cr2a, rock_cr2b, rock_cr3, rock_cr4, rock_cr5, rock_cr7)
 rock_data <- rock_data[,c(19, 18, 2:17)]
-rock_data <- rock_data %>%
-  mutate("MgN" = ((MgO / (40.31)) / ((MgO / (40.31)) + (FeO / (71.85)))) * (100))
 rock_data$RockName <- as.factor(rock_data$RockName)
+```
 
-#filter for data constraints
+Use the below chunk to filter for analysis constraints
+```{r data constraints}
 rock_data[rock_data == ""] <- NA
 
 rock_data_wt <- rock_data %>%
   select("Comment", "P2O5":"K2O", "Total") %>%  #choose relevant columns
   filter(Total > 95.0 & Total < 101.0) %>% #select rows based on Total
   filter(!is.na(P2O5) & SiO2 < 90.0 & Al2O3 < 22.0 & K2O > 1.0) #select rows based on elements
+```
 
-#Start to work on plots - SiO2 vs Na2O + K2O for all rocks
+
+Create plot for SiO2 vs Na2O + K2O by each rock
+```{r silica vs alkali, echo = FALSE}
 alkali_plot <- ggplot(rock_data, aes(x = SiO2, y = Na2O + K2O)) +
   facet_wrap(vars(RockName)) + 
   geom_point() +
   geom_smooth()
 alkali_plot
+```
 
+Create plot for SiO2 vs MgO by each rock
+```{r si vs mg all, echo = FALSE}
+mg_plot_all <- ggplot(rock_data, aes(x = SiO2, y = MgO)) +
+  facet_wrap(vars(RockName)) + 
+  geom_point() +
+  geom_smooth()
+mg_plot_all
+```
 
-#create TAS plot to create background for data layer
-#create blank dataframe for tas plot
+Create plot for SiO2 vs FeO by each rock
+```{r si vs fe all, echo = FALSE}
+fe_plot_all <- ggplot(rock_data, aes(x = SiO2, y = FeO)) +
+  facet_wrap(vars(RockName)) + 
+  geom_point() +
+  geom_smooth()
+fe_plot_all
+```
+
+Create plot for Al2O3 vs TiO by each rock
+```{r al vs ti all, echo = FALSE}
+alti_plot_all <- ggplot(rock_data, aes(x = Al2O3, y = TiO2)) +
+  facet_wrap(vars(RockName)) + 
+  geom_point() +
+  geom_smooth()
+alti_plot_all
+```
+
+Create a TAS Diagram as a background layer
+```{r tas diagram, echo = FALSE}
 d = data.frame(x = c(40, 80), y = c(0,15))
-
-
 theme_set(theme_bw(base_size=28))
-
 #makes the TAS template
 p <- ggplot(data=d, mapping=aes(x=x, y=y)) +
   geom_blank() +
@@ -109,72 +141,52 @@ tas <- p + annotate("text", label = "Basalt", x = 48.5, y = 2, size=4)+
   annotate("text", label = "Phonolite", x = 57, y = 14, size=4)+
   annotate("text", label = "Foidite", x = 45, y = 12, size=4)
 tas
+```
 
-#plot alkali by rock name
+Plot Alkali by Rock Name
+```{r alkali by rockname, echo = FALSE}
 final_alkplot <- rock_data %>%
   group_by(RockName) %>%
   ggplot(mapping = aes(x = SiO2, y = Na2O + K2O, colour = RockName, legend(cex = 0.75))) +
   geom_point()
-  
 final_alkplot
+```
 
-
-# use rock_data to add points to the tas diagram
+Overlay Alkali Plot on TAS Diagram
+```{r overlay, echo = FALSE}
 tas +
   geom_point(data = rock_data, aes(x = SiO2, y = Na2O + K2O, colour = RockName))
+```
 
 
-#plot sio2 vs mg
+Now to look at plots of all rocks together
+
+Plot Silica vs Magnesium by rock
+```{r si vs mg, echo = FALSE}
 mg_plot <- rock_data %>%
   group_by(RockName) %>%
-  ggplot(mapping = aes(SiO2, MgN, colour = RockName)) +
-  geom_point() +
-  geom_smooth(aes(group = 1))
-mg_plot
-  
-  mg_plot <- mg_plot + 
-    guides(color = guide_legend(override.aes = list(size = 4))) + 
-    theme(text = element_text(size = 10),
-          legend.key.size = unit(0.25, "cm"))
+  ggplot(mapping = aes(SiO2, MgO, colour = RockName)) +
+  geom_point()
+mg_plot <- mg_plot + guides(color = guide_legend(override.aes = list(size = 4)))
 mg_plot + scale_x_continuous(name = "SiO2", limits = c(50, 80))
+```
 
-
-#plot sio2 vs al
-al_plot <- rock_data %>%
-  group_by(RockName) %>%
-  ggplot(mapping = aes(SiO2, Al2O3, colour = RockName)) +
-  geom_point() +
-  geom_smooth(aes(group = 1))
-al_plot <- al_plot + guides(color = guide_legend(override.aes = list(size = 4)))
-al_plot
-
-#plot sio2 vs feo
+Plot Silica vs Iron by rock
+```{r si vs fe, echo = FALSE}
 fe_plot <- rock_data %>%
   group_by(RockName) %>%
   ggplot(mapping = aes(SiO2, FeO, colour = RockName)) +
   geom_point()
- fe_plot <- fe_plot + guides(color = guide_legend(override.aes = list(size = 4)))
-fe_plot
+  fe_plot <- fe_plot + guides(color = guide_legend(override.aes = list(size = 4)))
+fe_plot + scale_x_continuous(name = "SiO2", limits = c(50, 80))
+```
 
-#plot sio2 vs tio2
-ti_plot <- rock_data %>%
+Plot Aluminum vs Titanium by rock
+```{r al vs ti, echo = FALSE}
+alti_plot <- rock_data %>%
   group_by(RockName) %>%
-  ggplot(mapping = aes(SiO2, TiO2, color = RockName)) +
-  geom_point() +
-  geom_smooth(aes(group = 1))
-ti_plot <- ti_plot + guides(color = guide_legend(override.aes = list(size = 4)))
-ti_plot
-
-#plot sio2 vs cao
-ca_plot <- rock_data %>%
-  group_by(RockName) %>%
-  ggplot(mapping = aes(SiO2, CaO, color = RockName)) +
-  geom_point() +
-  geom_smooth(aes(group = 1))
-ca_plot <- ca_plot + guides(color = guide_legend(override.aes = list(size = 4)))
-ca_plot
-
-##Plot Mg#
-mg_num <- rock_data %>%
-  mutate("MgN" = ((MgO / (40.31)) / ((MgO / (40.31)) + (FeO / (71.85)))) * (100))
-
+  ggplot(mapping = aes(Al2O3, TiO2, colour = RockName)) +
+  geom_point()
+  alti_plot <- alti_plot + guides(color = guide_legend(override.aes = list(size = 4)))
+alti_plot
+```

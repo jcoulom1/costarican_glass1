@@ -15,3 +15,8 @@ added plots for SiO2 vs MgO, Al2O3, FeO and TiO2
 Saw Drew and made some cosmetic changes to way plots are run.  Added an 
 Rmarkdown file so plots will be able to publish for review by Molly
 
+Updated many many things and did not change branches.  Currently on Master and
+am going to commit and push and then pull in all branches.  Changes made include
+creating rmd file, adding code to calculate Mg# and updating SiO2 to Mg# instead
+of MgO.  Also changed legend to better size
+
