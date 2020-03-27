@@ -20,3 +20,6 @@ am going to commit and push and then pull in all branches.  Changes made include
 creating rmd file, adding code to calculate Mg# and updating SiO2 to Mg# instead
 of MgO.  Also changed legend to better size
 
+Added new data sheet with bulk composition data from first "wheel"
+Pulled into new file and used same code to select columns and group
+the multiple points into each rock set.

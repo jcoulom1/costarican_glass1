@@ -3,9 +3,10 @@
 #####
 
 ##Load data and packages
-cr_data <- read.csv("data/probe_data_molly.csv")
+cr_data <- read.csv("C:/Users/labry/Documents/R/costarican_glass1/data/wt%_probe_data.csv")
 library(dbplyr)
 library(tidyverse)
+library(gridExtra)
 
 #create new column to sort by bulk rocks into a column for rockname
 
@@ -33,8 +34,8 @@ rock_cr5 <- cr_data %>%
 rock_cr7 <- cr_data %>%
   filter(grepl("CR7", cr_data$Comment)) %>%
   mutate("RockName" = "CR7")
-rock_data <- rbind(rock_cr1a, rock_cr1b, rock_cr2a, rock_cr2b, rock_cr3, rock_cr4, rock_cr5)
-rock_data <- rock_data[,c(19, 18, 2:17)]
+rock_data <- rbind(rock_cr1a, rock_cr1b, rock_cr2a, rock_cr2b, rock_cr3, rock_cr4, rock_cr5, rock_cr7)
+rock_data <- rock_data[,c(30, 24, 2:16)]
 rock_data <- rock_data %>%
   mutate("MgN" = ((MgO / (40.31)) / ((MgO / (40.31)) + (FeO / (71.85)))) * (100))
 rock_data$RockName <- as.factor(rock_data$RockName)
@@ -43,15 +44,14 @@ rock_data$RockName <- as.factor(rock_data$RockName)
 rock_data[rock_data == ""] <- NA
 
 rock_data_wt <- rock_data %>%
-  select("Comment", "P2O5":"K2O", "Total") %>%  #choose relevant columns
+  select("RockName":"Total", "MgN") %>%  #choose relevant columns
   filter(Total > 95.0 & Total < 101.0) %>% #select rows based on Total
-  filter(!is.na(P2O5) & SiO2 < 90.0 & Al2O3 < 22.0 & K2O > 1.0) #select rows based on elements
+  filter(is.na(V2O3) & SiO2 < 90.0 & Al2O3 < 22.0 & K2O > 1.0) #select rows based on elements
 
 #Start to work on plots - SiO2 vs Na2O + K2O for all rocks
-alkali_plot <- ggplot(rock_data, aes(x = SiO2, y = Na2O + K2O)) +
+alkali_plot <- ggplot(rock_data_wt, aes(x = SiO2, y = Na2O + K2O)) +
   facet_wrap(vars(RockName)) + 
-  geom_point() +
-  geom_smooth()
+  geom_point()
 alkali_plot
 
 
@@ -111,7 +111,7 @@ tas <- p + annotate("text", label = "Basalt", x = 48.5, y = 2, size=4)+
 tas
 
 #plot alkali by rock name
-final_alkplot <- rock_data %>%
+final_alkplot <- rock_data_wt %>%
   group_by(RockName) %>%
   ggplot(mapping = aes(x = SiO2, y = Na2O + K2O, colour = RockName, legend(cex = 0.75))) +
   geom_point()
@@ -121,10 +121,10 @@ final_alkplot
 
 # use rock_data to add points to the tas diagram
 tas +
-  geom_point(data = rock_data, aes(x = SiO2, y = Na2O + K2O, colour = RockName))
+  geom_point(data = rock_data-wt, aes(x = SiO2, y = Na2O + K2O, colour = RockName))
 
 
-#plot sio2 vs mg
+#plot sio2 vs mg#
 mg_plot <- rock_data %>%
   group_by(RockName) %>%
   ggplot(mapping = aes(SiO2, MgN, colour = RockName)) +
@@ -135,7 +135,8 @@ mg_plot
   mg_plot <- mg_plot + 
     guides(color = guide_legend(override.aes = list(size = 4))) + 
     theme(text = element_text(size = 10),
-          legend.key.size = unit(0.25, "cm"))
+          legend.key.size = unit(0.25, "cm"),
+          legend.title = element_text(size = 12))
 mg_plot + scale_x_continuous(name = "SiO2", limits = c(50, 80))
 
 
@@ -145,7 +146,11 @@ al_plot <- rock_data %>%
   ggplot(mapping = aes(SiO2, Al2O3, colour = RockName)) +
   geom_point() +
   geom_smooth(aes(group = 1))
-al_plot <- al_plot + guides(color = guide_legend(override.aes = list(size = 4)))
+al_plot <- al_plot + 
+  guides(color = guide_legend(override.aes = list(size = 4))) +
+  theme(text = element_text(size = 10),
+        legend.key.size = unit(0.25, "cm"),
+        legend.title = element_text(size = 12))
 al_plot
 
 #plot sio2 vs feo
@@ -153,7 +158,11 @@ fe_plot <- rock_data %>%
   group_by(RockName) %>%
   ggplot(mapping = aes(SiO2, FeO, colour = RockName)) +
   geom_point()
- fe_plot <- fe_plot + guides(color = guide_legend(override.aes = list(size = 4)))
+ fe_plot <- fe_plot + 
+   guides(color = guide_legend(override.aes = list(size = 4))) +
+   theme(text = element_text(size = 10),
+         legend.key.size = unit(0.25, "cm"),
+         legend.title = element_text(size = 12))
 fe_plot
 
 #plot sio2 vs tio2
@@ -162,19 +171,80 @@ ti_plot <- rock_data %>%
   ggplot(mapping = aes(SiO2, TiO2, color = RockName)) +
   geom_point() +
   geom_smooth(aes(group = 1))
-ti_plot <- ti_plot + guides(color = guide_legend(override.aes = list(size = 4)))
+ti_plot <- ti_plot + 
+  guides(color = guide_legend(override.aes = list(size = 4))) +
+  theme(text = element_text(size = 10),
+        legend.key.size = unit(0.25, "cm"),
+        legend.title = element_text(size = 12))
 ti_plot
 
 #plot sio2 vs cao
 ca_plot <- rock_data %>%
   group_by(RockName) %>%
   ggplot(mapping = aes(SiO2, CaO, color = RockName)) +
-  geom_point() +
-  geom_smooth(aes(group = 1))
-ca_plot <- ca_plot + guides(color = guide_legend(override.aes = list(size = 4)))
+  geom_point(aes(shape = RockName, color = RockName)) +
+  scale_shape_manual(values = c(7, 8, 21:25, 10)) + 
+  scale_color_manual(values = c("coral1", "chartreuse3", "cadetblue2", "blue2", "deeppink2", "orchid1", "seagreen1", "firebrick3"))
+ ca_plot <- ca_plot + 
+  guides(color = guide_legend(override.aes = list(size = 4))) +
+  theme(text = element_text(size = 10),
+        legend.key.size = unit(0.25, "cm"),
+        legend.title = element_text(size = 12))
 ca_plot
 
-##Plot Mg#
-mg_num <- rock_data %>%
-  mutate("MgN" = ((MgO / (40.31)) / ((MgO / (40.31)) + (FeO / (71.85)))) * (100))
 
+rock_data_wt$RockName <- as.character(rock_data_wt$RockName)
+
+## Plot 1A to 1B - Si to Mg
+cr1a_cr1b_mg <- rock_data_wt %>%
+  filter(grepl("CR1", rock_data_wt$RockName)) %>%
+  ggplot(aes(SiO2, MgN, colour = RockName)) + 
+  geom_point(aes(shape = RockName, color = RockName)) +
+  scale_shape_manual(values = c(7, 8)) + 
+  scale_color_manual(values = c("coral1", "chartreuse3")) + 
+  geom_point()
+cr1a_cr1b_mg
+
+## Plot 1A to 1B - Si to Alkali
+cr1a_cr1b_alk <- rock_data_wt %>%
+  filter(grepl("CR1", rock_data_wt$RockName)) %>%
+  ggplot(aes(SiO2, Na2O + K2O, colour = RockName)) + 
+  geom_point(aes(shape = RockName, color = RockName)) +
+  scale_shape_manual(values = c(7, 8)) + 
+  scale_color_manual(values = c("coral1", "chartreuse3")) + 
+  geom_point() + 
+  theme(legend.position = "bottom")
+cr1a_cr1b_alk
+
+## Plot 1A to 1B - Si to Fe
+cr1a_cr1b_fe <- rock_data_wt %>%
+  filter(grepl("CR1", rock_data_wt$RockName)) %>%
+  ggplot(aes(SiO2, FeO, colour = RockName)) + 
+  geom_point(aes(shape = RockName, color = RockName)) +
+  scale_shape_manual(values = c(7, 8)) + 
+  scale_color_manual(values = c("coral1", "chartreuse3")) + 
+  geom_point()
+cr1a_cr1b_fe
+
+## Plot 1A to 1B - Al to Ti
+cr1a_cr1b_alti <- rock_data_wt %>%
+  filter(grepl("CR1", rock_data_wt$RockName)) %>%
+  ggplot(aes(Al2O3, TiO2, colour = RockName)) + 
+  geom_point(aes(shape = RockName, color = RockName)) +
+  scale_shape_manual(values = c(7, 8)) + 
+  scale_color_manual(values = c("coral1", "chartreuse3")) + 
+  geom_point()
+cr1a_cr1b_alti
+
+g_legend <- function(a.gplot) {
+  tmp <- ggplot_gtable(ggplot_build(a.gplot))
+  leg <- which(sapply(tmp$grobs, function(rock_data_wt) rock_data_wt$RockName) == "guide-box")
+  legend <- tmp$grobs[[leg]]
+  return(legend)
+}
+
+mylegend <- g_legend(cr1a_cr1b_alk)
+
+grid.arrange(cr1a_cr1b_alk, cr1a_cr1b_mg, nrow = 1)
+
+grid_shared_legend <- function()
