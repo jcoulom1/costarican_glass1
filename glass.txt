@@ -23,3 +23,8 @@ of MgO.  Also changed legend to better size
 Added new data sheet with bulk composition data from first "wheel"
 Pulled into new file and used same code to select columns and group
 the multiple points into each rock set.
+
+Have no updated to github in quite some time.  However worried that I have no
+other copy of this work and want a backup.  So pushing all code into git so
+can reboot if lost on computer.
+

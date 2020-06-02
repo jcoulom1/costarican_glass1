@@ -7,6 +7,9 @@ cr_data <- read.csv("C:/Users/labry/Documents/R/costarican_glass1/data/wt%_probe
 library(dbplyr)
 library(tidyverse)
 library(gridExtra)
+library(data.table)
+library(huxtable)
+library(kableExtra)
 
 #create new column to sort by bulk rocks into a column for rockname
 
@@ -46,7 +49,9 @@ rock_data[rock_data == ""] <- NA
 rock_data_wt <- rock_data %>%
   select("RockName":"Total", "MgN") %>%  #choose relevant columns
   filter(Total > 95.0 & Total < 101.0) %>% #select rows based on Total
-  filter(is.na(V2O3) & SiO2 < 90.0 & Al2O3 < 22.0 & K2O > 1.0) #select rows based on elements
+  filter(is.na(V2O3) & SiO2 < 90.0 & Al2O3 < 22.0 & Al2O3 > 10.0 & K2O > 1.0) #select rows based on elements
+
+
 
 #Start to work on plots - SiO2 vs Na2O + K2O for all rocks
 alkali_plot <- ggplot(rock_data_wt, aes(x = SiO2, y = Na2O + K2O)) +
@@ -248,3 +253,40 @@ mylegend <- g_legend(cr1a_cr1b_alk)
 grid.arrange(cr1a_cr1b_alk, cr1a_cr1b_mg, nrow = 1)
 
 grid_shared_legend <- function()
+  
+
+al_ti_tb <- rock_data_wt %>%
+  group_by(RockName) %>%
+  summarize(Al2O3mn = mean(Al2O3), Al2O3sd = sd(Al2O3), 
+            TiO2mn = mean(TiO2), TiO2sd = sd(TiO2))
+
+al_ti_tb$RockName <- as.character(al_ti_tb$RockName)
+
+alti_hux <- hux(al_ti_tb) %>%
+  add_colnames() %>%
+  set_bold(row = 1, col = everywhere, value = TRUE) %>%
+  set_number_format(2:9, 2:5, 2) %>%
+  set_all_borders(TRUE) %>%
+  set_col_width(4)
+print(alti_hux)
+
+#find mean for SiO2 to choose appropriate glass samples for table
+glass_mean <- rock_data_wt %>%
+  group_by(RockName) %>%
+  summarize(mean(SiO2))
+
+
+
+
+##create table w/ chosen glass samples
+cr_data <- cr_data %>%
+  select("Comment", "P2O5":"Total")
+cr_data2 <- cr_data[,-1]  ##removes first column
+rownames(cr_data2) <- cr_data[,1] ## adds first column back as proper row
+cr_data2 <- as.matrix(cr_data2)  ##changes df to matrix in prep for t()
+cr_data2_trans <- t(cr_data2)  ##transposes matrix
+cr_data2_trans2 <- as.data.frame(cr_data2_trans)
+
+cr_table1 <- cr_data2_trans2 %>%  ##creates table w/ specific samples chosen
+  select("CR1A2_2 Pt1", "CR1B_1 Pt15", "CR2A2_3 PT1", "CR2B2_1 PT2", "CR31_3 PT7", "CR42_1 PT6", "CR51_2 PT5", "CR72_3 Pt1") %>%
+  drop_na() ##drops the rows w/ na
