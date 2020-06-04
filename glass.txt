@@ -28,3 +28,7 @@ Have no updated to github in quite some time.  However worried that I have no
 other copy of this work and want a backup.  So pushing all code into git so
 can reboot if lost on computer.
 
+Added data for 2nd batch of bulk rocks (from Allen).  Updated all code
+to include rocks CR2A_T (first 2A was not fully fused) CR2A_M (redo of 2A),
+CR2B, CR4 and CR5. Changed colors and added a shape to accomodate all new data.
+Also created code for comparision of CR2A to CR2B.

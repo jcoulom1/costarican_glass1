@@ -12,7 +12,7 @@ library(data.table)
 library(lattice)
 library(captioner)
 library(writexl)
-
+library(furniture)
 bulk_data <- read.csv("C:/Users/labry/Documents/R/costarican_glass1/data/bulk_comp_data.csv")
 table_nums <- captioner(prefix = "Table")
 figure_nums <- captioner(prefix = "Figure")
@@ -30,16 +30,31 @@ blk_cr1a <- bulk_data %>%
 blk_cr1b <- bulk_data %>%
   filter(grepl("CR1B", bulk_data$Comment)) %>%
   mutate("RockName" = "CR1B")
+blk_cr2a_t <- bulk_data %>%
+  filter(grepl("CR2A_T", bulk_data$Comment)) %>%
+  mutate("RockName" = "CR2A_T")
+blk_cr2a_m <- bulk_data %>%
+  filter(grepl("CR2A_M", bulk_data$Comment)) %>%
+  mutate("RockName" = "CR2A_M")
+blk_cr2b <- bulk_data %>%
+  filter(grepl("CR2B", bulk_data$Comment)) %>%
+  mutate("RockName" = "CR2B")
 blk_cr3 <- bulk_data %>%
   filter(grepl("CR3", bulk_data$Comment)) %>%
   mutate("RockName" = "CR3")
+blk_cr4 <- bulk_data %>%
+  filter(grepl("CR4", bulk_data$Comment)) %>%
+  mutate("RockName" = "CR4")
+blk_cr5 <- bulk_data %>%
+  filter(grepl("CR5", bulk_data$Comment)) %>%
+  mutate("RockName" = "CR5")
 blk_cr6 <- bulk_data %>%
   filter(grepl("CR6", bulk_data$Comment)) %>%
   mutate("RockName" = "CR6")
 blk_cr7 <- bulk_data %>%
   filter(grepl("CR7", bulk_data$Comment)) %>%
   mutate("RockName" = "CR7")
-blk_data <- rbind(blk_cr1a, blk_cr1b, blk_cr3, blk_cr6, blk_cr7) #pull all df's together w/ 1 col for rockname
+blk_data <- rbind(blk_cr1a, blk_cr1b, blk_cr2a_m, blk_cr2b, blk_cr3, blk_cr4, blk_cr5, blk_cr6, blk_cr7) #pull all df's together w/ 1 col for rockname
 blk_data <- blk_data[,c(29, 23, 2:15)] #reorder the columns and limit to relevant ones
 blk_data <- blk_data %>%  #add column w/ Mg# calculated
   mutate("MgN" = ((MgO / (40.31)) / ((MgO / (40.31)) + (FeO / (71.85)))) * (100))
@@ -56,8 +71,8 @@ alk_blk_plot <- ggplot(blk_data_wt, aes(x = SiO2, y = Na2O + K2O)) +
   facet_wrap(vars(RockName)) +  #create facet wrap by rockname
   geom_point(aes(shape = RockName, color = RockName)) +  #indicate using shape and color to visualize
   labs(title = "Silica Vs Alkali (Na2O + K2O)", x = "SiO2, Wt%", y = "Na2O + K20, Wt%") +   #add plot title % axis labels
-  scale_shape_manual(values = c(7, 8, 21:25, 10)) +  #provide values for shape
-  scale_color_manual(values = c("coral1", "chartreuse3", "turquoise3", "blue2", "deeppink2", "orchid1", "seagreen3", "firebrick3")) + #prov values for color
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) +  #provide values for shape
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff", "blue2", "deeppink2", "orchid1", "royalblue4", "firebrick3", "paleturquoise1")) + #prov values for color
   guides(color = guide_legend(override.aes = list(size = 5))) + #this makes the legend key marks bigger
   theme(text = element_text(size = 15), #this makes all the text bigger
         legend.key.size = unit(1.0, "cm"), #this makes legend smaller
@@ -72,8 +87,8 @@ mg_blk_all <- ggplot(blk_data_wt, aes(x = SiO2, y = MgN)) +
   facet_wrap(vars(RockName)) + 
   geom_point(aes(shape = RockName, color = RockName)) +
   ggtitle("Silica Vs Mg#") +
-  scale_shape_manual(values = c(7, 8, 21:25, 10)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "turquoise3", "blue2", "deeppink2", "orchid1", "seagreen3", "firebrick3")) +
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) +  #provide values for shape
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff", "blue2", "deeppink2", "orchid1", "royalblue4", "firebrick3", "paleturquoise1")) + #prov values for color
   guides(color = guide_legend(override.aes = list(size = 5))) +
   theme(text = element_text(size = 15),
         legend.key.size = unit(1.0, "cm"),
@@ -88,8 +103,8 @@ fe_blk_all <- ggplot(blk_data_wt, aes(x = SiO2, y = FeO)) +
   facet_wrap(vars(RockName)) + 
   geom_point(aes(shape = RockName, color = RockName)) +
   ggtitle("Silica vs Iron") +
-  scale_shape_manual(values = c(7, 8, 21:25, 10)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "turquoise3", "blue2", "deeppink2", "orchid1", "seagreen3", "firebrick3")) +
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) +  #provide values for shape
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff", "blue2", "deeppink2", "orchid1", "royalblue4", "firebrick3", "paleturquoise1")) + #prov values for color
   guides(color = guide_legend(override.aes = list(size = 5))) +
   theme(text = element_text(size = 15),
         legend.key.size = unit(1.0, "cm"),
@@ -104,8 +119,8 @@ ca_blk_all <- ggplot(blk_data_wt, aes(x = SiO2, y = CaO)) +
   facet_wrap(vars(RockName)) + 
   geom_point(aes(shape = RockName, color = RockName)) +
   ggtitle("Silica vs Calcium") +
-  scale_shape_manual(values = c(7, 8, 21:25, 10)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "turquoise3", "blue2", "deeppink2", "orchid1", "seagreen3", "firebrick3")) +
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) +  #provide values for shape
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff", "blue2", "deeppink2", "orchid1", "royalblue4", "firebrick3", "paleturquoise1")) + #prov values for color
   guides(color = guide_legend(override.aes = list(size = 5))) +
   theme(text = element_text(size = 15),
         legend.key.size = unit(1.0, "cm"),
@@ -119,8 +134,10 @@ al_blk_all <- ggplot(blk_data_wt, aes(x = SiO2, y = Al2O3)) +
   facet_wrap(vars(RockName)) + 
   geom_point(aes(shape = RockName, color = RockName)) +
   ggtitle("Silica vs Aluminum") +
-  scale_shape_manual(values = c(7, 8, 21:25, 10)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "turquoise3", "blue2", "deeppink2", "orchid1", "seagreen3", "firebrick3")) +
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) +  
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff",
+                                "blue2", "deeppink2", "orchid1", 
+                                "royalblue4", "firebrick3", "paleturquoise1")) + 
   guides(color = guide_legend(override.aes = list(size = 5))) +
   theme(text = element_text(size = 15),
         legend.key.size = unit(1.0, "cm"),
@@ -132,8 +149,10 @@ al_blk_all
 alti_blk_all <- ggplot(blk_data_wt, aes(x = Al2O3, y = TiO2)) +
   facet_wrap(vars(RockName)) + 
   geom_point(aes(shape = RockName, color = RockName)) +
-  scale_shape_manual(values = c(7, 8, 21:25, 10)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "turquoise3", "blue2", "deeppink2", "orchid1", "seagreen3", "firebrick3")) +
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) +  
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff",
+                                "blue2", "deeppink2", "orchid1", 
+                                "royalblue4", "firebrick3", "paleturquoise1")) + 
   guides(color = guide_legend(override.aes = list(size = 5))) +
   theme(text = element_text(size = 15),
         legend.key.size = unit(1.0, "cm"),
@@ -197,8 +216,10 @@ final_blk_alkplot <- blk_data_wt %>%
   group_by(RockName) %>%
   ggplot(mapping = aes(x = SiO2, y = Na2O + K2O, colour = RockName, legend(cex = 0.75))) +
   geom_point(aes(shape = RockName, color = RockName)) +
-  scale_shape_manual(values = c(7, 8, 21:25, 10)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "turquoise3", "blue2", "deeppink2", "orchid1", "seagreen3", "firebrick3")) +
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) +  
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff",
+                                "blue2", "deeppink2", "orchid1", 
+                                "royalblue4", "firebrick3", "paleturquoise1")) + 
   guides(color = guide_legend(override.aes = list(size = 5))) +
   theme(text = element_text(size = 15),
         legend.key.size = unit(1.0, "cm"),
@@ -210,14 +231,15 @@ final_blk_alkplot
 tas +
   geom_point(data = blk_data_wt, aes(x = SiO2, y = Na2O + K2O, shape = RockName, color = RockName)) +
   labs(title = "Bulk Composition on TAS Diagram", x = "SiO2, Wt%", y = "Na2O + K2O") +
-  scale_shape_manual(values = c(7, 8, 21:25, 10)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "turquoise3", "blue2", "deeppink2", "orchid1", "seagreen3", "firebrick3")) + 
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) +  
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff",
+                                "blue2", "deeppink2", "orchid1", 
+                                "royalblue4", "firebrick3", "paleturquoise1")) + 
   guides(color = guide_legend(override.aes = list(size = 5))) +
   theme(text = element_text(size = 15),
         legend.key.size = unit(1.0, "cm"),
         legend.title = element_text(size = 14),
         plot.title = element_text(hjust = 0.5))
-figure_nums("tas")
 
 
 ##Now to look at plots of all rocks together
@@ -228,8 +250,10 @@ mg_blk_plot <- blk_data_wt %>%
   ggplot(mapping = aes(SiO2, MgN, colour = RockName)) +
   geom_point(aes(shape = RockName, color = RockName)) +
   ggtitle("Silica vs Magnesium Number by rock") +
-  scale_shape_manual(values = c(7, 8, 21:25, 10)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "turquoise3", "blue2", "deeppink2", "orchid1", "seagreen3", "firebrick3"))
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) +  
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff",
+                                "blue2", "deeppink2", "orchid1", 
+                                "royalblue4", "firebrick3", "paleturquoise1"))
 mg_blk_plot <- mg_blk_plot + 
   guides(color = guide_legend(override.aes = list(size = 5))) + 
   theme(text = element_text(size = 15),
@@ -246,8 +270,10 @@ fe_blk_plot <- blk_data_wt %>%
   ggplot(mapping = aes(SiO2, FeO, colour = RockName)) +
   geom_point(aes(shape = RockName, color = RockName)) +
   ggtitle("Silica vs Iron by rock") +
-  scale_shape_manual(values = c(7, 8, 21:25, 10)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "turquoise3", "blue2", "deeppink2", "orchid1", "seagreen3", "firebrick3"))
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) +  
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff",
+                                "blue2", "deeppink2", "orchid1", 
+                                "royalblue4", "firebrick3", "paleturquoise1"))
 fe_blk_plot <- fe_blk_plot + 
   guides(color = guide_legend(override.aes = list(size = 5))) +
   theme(text = element_text(size = 15),
@@ -264,8 +290,10 @@ ca_blk_plot <- blk_data_wt %>%
   ggplot(mapping = aes(SiO2, CaO, colour = RockName)) +
   geom_point(aes(shape = RockName, color = RockName)) +
   ggtitle("Silica vs Calcium by rock") +
-  scale_shape_manual(values = c(7, 8, 21:25, 10)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "turquoise3", "blue2", "deeppink2", "orchid1", "seagreen3", "firebrick3"))
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) +  
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff",
+                                "blue2", "deeppink2", "orchid1", 
+                                "royalblue4", "firebrick3", "paleturquoise1"))
 ca_blk_plot <- ca_blk_plot + 
   guides(color = guide_legend(override.aes = list(size = 5))) +
   theme(text = element_text(size = 15),
@@ -281,8 +309,10 @@ al_blk_plot <- blk_data_wt %>%
   ggplot(mapping = aes(SiO2, Al2O3, colour = RockName)) +
   geom_point(aes(shape = RockName, color = RockName)) +
   ggtitle("Silica vs Aluminum by rock") +
-  scale_shape_manual(values = c(7, 8, 21:25, 10)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "turquoise3", "blue2", "deeppink2", "orchid1", "seagreen3", "firebrick3"))
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) +  
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff",
+                                "blue2", "deeppink2", "orchid1", 
+                                "royalblue4", "firebrick3", "paleturquoise1"))
 al_blk_plot <- al_blk_plot + 
   guides(color = guide_legend(override.aes = list(size = 5))) +
   theme(text = element_text(size = 15),
@@ -297,8 +327,10 @@ alti_blk_plot <- blk_data_wt %>%
   ggplot(mapping = aes(Al2O3, TiO2, colour = RockName)) +
   geom_point(aes(shape = RockName, color = RockName)) +
   ggtitle("Aluminum vs Titanium by rock") +
-  scale_shape_manual(values = c(7, 8, 21:25, 10)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "turquoise3", "blue2", "deeppink2", "orchid1", "seagreen3", "firebrick3"))
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) +  
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff",
+                                "blue2", "deeppink2", "orchid1", 
+                                "royalblue4", "firebrick3", "paleturquoise1"))
 alti_blk_plot <- alti_blk_plot + 
   guides(color = guide_legend(override.aes = list(size = 5))) +
   theme(text = element_text(size = 15),
@@ -370,14 +402,92 @@ cr1a_cr1b_blkalti
 
 
 ##Taking a look at comparing CR2A to CR2B in Bulk Composition
-##(bulk data for CR2 not yet available)
+
+cr2a_cr2b_blkalk <- blk_data_wt %>%
+  filter(grepl("CR2", blk_data_wt$RockName)) %>%
+  ggplot(aes(SiO2, Na2O + K2O, colour = RockName)) + 
+  geom_point(aes(shape = RockName, color = RockName)) +
+  scale_shape_manual(values = c(10, 11)) + 
+  scale_color_manual(values = c("peachpuff4", "blue2")) + 
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14))
+cr2a_cr2b_blkalk
+
+
+##Create plot for looking at CR1A to CR1B Si to Mg# in bulk rock composition 
+cr2a_cr2b_blkmg <- blk_data_wt %>%
+  filter(grepl("CR2", blk_data_wt$RockName)) %>%
+  ggplot(aes(SiO2, MgN, colour = RockName)) + 
+  geom_point(aes(shape = RockName, color = RockName)) +
+  scale_shape_manual(values = c(10, 11)) + 
+  scale_color_manual(values = c("peachpuff4", "blue2")) + 
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14))
+cr2a_cr2b_blkmg
+
+
+##Create plot for looking at CR1A to CR1B Si to Fe in bulk rock composition 
+cr2a_cr2b_blkfe <- blk_data_wt %>%
+  filter(grepl("CR2", blk_data_wt$RockName)) %>%
+  ggplot(aes(SiO2, FeO, colour = RockName)) + 
+  geom_point(aes(shape = RockName, color = RockName)) +
+  scale_shape_manual(values = c(10, 11)) + 
+  scale_color_manual(values = c("peachpuff4", "blue2")) + 
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14))
+cr2a_cr2b_blkfe
+
+
+##Create plot for looking at CR1A to CR1B Al to Ti in bulk rock composition 
+cr2a_cr2b_blkalti <- blk_data_wt %>%
+  filter(grepl("CR2", blk_data_wt$RockName)) %>%
+  ggplot(aes(Al2O3, TiO2, colour = RockName)) + 
+  geom_point(aes(shape = RockName, color = RockName)) +
+  scale_shape_manual(values = c(10, 11)) + 
+  scale_color_manual(values = c("peachpuff4", "blue2")) + 
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14))
+cr2a_cr2b_blkalti
+
 
 
 ##Create table for mean for each rock
+#I like this better - cleaner
+bulk_avg <- blk_data_wt %>%
+  group_by(RockName) %>% ##break into ind rocks
+  summarise(n = n(), "SiO2" = mean(SiO2), "TiO2" = mean(TiO2),
+            "Al2O3" = mean(Al2O3), "Cr" = mean(Cr2O3),
+            "M MgO" = mean(MgO), "CaO" = mean(CaO), "MnO" = mean(MnO),
+            "M FeO" = mean(FeO), "Na2O" = mean(Na2O), "K2O" = mean(K2O),
+            "M S" = mean(S), "P2O5" = mean(P2O5), "MgN" = mean(MgN),
+            "M Total" = mean(Total))
+bulk_avg <- as.data.frame(bulk_avg)  ##convert above to df
+bulk_avga <- bulk_avg[,-1] ##remove first column from df
+rownames(bulk_avga) <- bulk_avg[, 1] ## add column back in as rownames
+bulk_avg_tran <- transpose(bulk_avga) ##transpose df
+rownames(bulk_avg_tran) <- colnames(bulk_avga) ##trans the col names
+colnames(bulk_avg_tran) <- rownames(bulk_avga) ##trans the row names
+rownames_to_column(bulk_avg_tran, var = "Element")
+
+
+
+
+
+
+##Create table for mean for each rock
+#I don't care for this
 bulk_avg <- blk_data_wt %>%
   group_by(RockName) %>% ##break into ind rocks
   summarise(n = n(),
-            "M SiO2" = mean(SiO2), "sd SiO2" = (.,sd(SiO2)),
+            "M SiO2" = mean(SiO2),
             "M TiO2" = mean(TiO2),
             "M Al2O3" = mean(Al2O3),
             "M Cr" = mean(Cr2O3),
@@ -399,5 +509,10 @@ rownames(bulk_avg_tran) <- colnames(bulk_avga) ##trans the col names
 colnames(bulk_avg_tran) <- rownames(bulk_avga) ##trans the row names
 rownames_to_column(bulk_avg_tran, var = "Element")  #give name to row
 
+## attempt to create table with furniture package
+#this method worked but c/n print well in Rmd so disregarding
 
- 
+table_2 <- furniture::table1(blk_data_wt,
+                             "SiO2" = SiO2, "TiO2" = TiO2,
+                             splitby = ~RockName,
+                             test = FALSE)

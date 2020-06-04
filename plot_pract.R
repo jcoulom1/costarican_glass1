@@ -6,6 +6,8 @@ library(ggplot2)
 library(gridExtra)
 library(ggpubr)
 library(dplyr)
+library(arsenal) ## not helpful
+library(furniture)
 
   bulk_data <- read.csv("C:/Users/labry/Documents/R/costarican_glass1/data/bulk_comp_data.csv")
   
@@ -17,16 +19,31 @@ library(dplyr)
   blk_cr1b <- bulk_data %>%
     filter(grepl("CR1B", bulk_data$Comment)) %>%
     mutate("RockName" = "CR1B")
+  blk_cr2a_t <- bulk_data %>%
+    filter(grepl("CR2A_T", bulk_data$Comment)) %>%
+    mutate("RockName" = "CR2A_T")
+  blk_cr2a_m <- bulk_data %>%
+    filter(grepl("CR2A_M", bulk_data$Comment)) %>%
+    mutate("RockName" = "CR2A_M")
+  blk_cr2b <- bulk_data %>%
+    filter(grepl("CR2B", bulk_data$Comment)) %>%
+    mutate("RockName" = "CR2B")
   blk_cr3 <- bulk_data %>%
     filter(grepl("CR3", bulk_data$Comment)) %>%
     mutate("RockName" = "CR3")
+  blk_cr4 <- bulk_data %>%
+    filter(grepl("CR4", bulk_data$Comment)) %>%
+    mutate("RockName" = "CR4")
+  blk_cr5 <- bulk_data %>%
+    filter(grepl("CR5", bulk_data$Comment)) %>%
+    mutate("RockName" = "CR5")
   blk_cr6 <- bulk_data %>%
     filter(grepl("CR6", bulk_data$Comment)) %>%
     mutate("RockName" = "CR6")
   blk_cr7 <- bulk_data %>%
     filter(grepl("CR7", bulk_data$Comment)) %>%
     mutate("RockName" = "CR7")
-  blk_data <- rbind(blk_cr1a, blk_cr1b, blk_cr3, blk_cr6, blk_cr7) #pull all df's together w/ 1 col for rockname
+  blk_data <- rbind(blk_cr1a, blk_cr1b, blk_cr2a_t, blk_cr2a_m, blk_cr2b, blk_cr3, blk_cr4, blk_cr5, blk_cr6, blk_cr7) #pull all df's together w/ 1 col for rockname
   blk_data <- blk_data[,c(29, 23, 2:15)] #reorder the columns and limit to relevant ones
   blk_data <- blk_data %>%  #add column w/ Mg# calculated
     mutate("MgN" = ((MgO / (40.31)) / ((MgO / (40.31)) + (FeO / (71.85)))) * (100))
@@ -38,6 +55,77 @@ library(dplyr)
     filter(Total > 98.0 & Total < 101.0) #select rows based on Total
   #leave off last line of this due to bulk not requiring as many constraints
   
+  
+  #using arsenal package to create table
+  #this didn't really work, no way to list elements well
+fac <- c(blk_data_wt$SiO2, blk_data_wt$P2O5, blk_data_wt$TiO2)
+  table_1 <- tableby(RockName ~ fac, data = blk_data_wt)
+ summary(table_1, text = TRUE)
+ 
+ #using furniture package to create table
+ #this method worked but c/n print well in Rmd so disregarding
+ table_2 <- furniture::table1(blk_data_wt,
+                    "Elements" = SiO2:Total,
+                    splitby = ~RockName,
+                    test = FALSE)
+
+##test to compare CR2A_T to CR2A_M
+ cr2a_test_alk <- blk_data_wt %>%
+   filter(grepl("CR2A", blk_data_wt$RockName)) %>%
+   ggplot(aes(SiO2, Na2O + K2O, colour = RockName)) + 
+   geom_point(aes(shape = RockName, color = RockName)) +
+   scale_shape_manual(values = c(7, 8)) + 
+   scale_color_manual(values = c("coral1", "chartreuse3")) + 
+   guides(color = guide_legend(override.aes = list(size = 5))) +
+   theme(text = element_text(size = 15),
+         legend.key.size = unit(1.0, "cm"),
+         legend.title = element_text(size = 14))
+ cr2a_test_alk
+ 
+ 
+ ##Create plot for looking at CR1A to CR1B Si to Mg# in bulk rock composition 
+ cr2a_test_mg <- blk_data_wt %>%
+   filter(grepl("CR2A", blk_data_wt$RockName)) %>%
+   ggplot(aes(SiO2, MgN, colour = RockName)) + 
+   geom_point(aes(shape = RockName, color = RockName)) +
+   scale_shape_manual(values = c(7, 8)) + 
+   scale_color_manual(values = c("coral1", "chartreuse3")) + 
+   guides(color = guide_legend(override.aes = list(size = 5))) +
+   theme(text = element_text(size = 15),
+         legend.key.size = unit(1.0, "cm"),
+         legend.title = element_text(size = 14))
+ cr2a_test_mg
+ 
+ 
+ ##Create plot for looking at CR1A to CR1B Si to Fe in bulk rock composition 
+ cr1a_cr1b_blkfe <- blk_data_wt %>%
+   filter(grepl("CR1", blk_data_wt$RockName)) %>%
+   ggplot(aes(SiO2, FeO, colour = RockName)) + 
+   geom_point(aes(shape = RockName, color = RockName)) +
+   scale_shape_manual(values = c(7, 8)) + 
+   scale_color_manual(values = c("coral1", "chartreuse3")) + 
+   guides(color = guide_legend(override.aes = list(size = 5))) +
+   theme(text = element_text(size = 15),
+         legend.key.size = unit(1.0, "cm"),
+         legend.title = element_text(size = 14))
+ cr1a_cr1b_blkfe
+ 
+ 
+ ##Create plot for looking at CR1A to CR1B Al to Ti in bulk rock composition 
+ cr1a_cr1b_blkalti <- blk_data_wt %>%
+   filter(grepl("CR1", blk_data_wt$RockName)) %>%
+   ggplot(aes(Al2O3, TiO2, colour = RockName)) + 
+   geom_point(aes(shape = RockName, color = RockName)) +
+   scale_shape_manual(values = c(7, 8)) + 
+   scale_color_manual(values = c("coral1", "chartreuse3")) + 
+   guides(color = guide_legend(override.aes = list(size = 5))) +
+   theme(text = element_text(size = 15),
+         legend.key.size = unit(1.0, "cm"),
+         legend.title = element_text(size = 14))
+ cr1a_cr1b_blkalti
+ 
+ 
+   
   
   ##Plot Silica vs Mg# by rock  (FIRST PLOT)
   mg_blk_plot <- blk_data_wt %>%
