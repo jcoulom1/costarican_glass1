@@ -52,9 +52,9 @@ blk_cr1b <- bulk_data %>%
 blk_cr2a_t <- bulk_data %>%
   filter(grepl("CR2A_T", bulk_data$Comment)) %>%
   mutate("RockName" = "CR2A_T")
-blk_cr2a_m <- bulk_data %>%
-  filter(grepl("CR2A_M", bulk_data$Comment)) %>%
-  mutate("RockName" = "CR2A_M")
+blk_cr2a <- bulk_data %>%
+  filter(grepl("CR2A", bulk_data$Comment)) %>%
+  mutate("RockName" = "CR2A")
 blk_cr2b <- bulk_data %>%
   filter(grepl("CR2B", bulk_data$Comment)) %>%
   mutate("RockName" = "CR2B")
@@ -76,7 +76,7 @@ blk_cr7 <- bulk_data %>%
 ```
 
 ```{r grp blk rocks together, include=FALSE}
-blk_data <- rbind(blk_cr1a, blk_cr1b, blk_cr2a_m, blk_cr2b, blk_cr3, blk_cr4, blk_cr5, blk_cr6, blk_cr7)
+blk_data <- rbind(blk_cr1a, blk_cr1b, blk_cr2a, blk_cr2b, blk_cr3, blk_cr4, blk_cr5, blk_cr6, blk_cr7)
 blk_data <- blk_data[,c(29, 23, 2:15)]
 blk_data <- blk_data %>% 
   mutate("MgN" = ((MgO / (40.31)) / ((MgO / (40.31)) + (FeO / (71.85)))) * (100))
@@ -114,7 +114,7 @@ alk_blk_plot
 mg_blk_all <- ggplot(blk_data_wt, aes(x = SiO2, y = MgN)) +
   facet_wrap(vars(RockName)) + 
   geom_point(aes(shape = RockName, color = RockName)) +
-  labs(title = "Silica vs Magnesium #", x = "SiO2, Wt%", y = "Mg #, Wt%") +
+  labs(title = "Silica vs Magnesium #", x = "SiO2, Wt%", y = "Mg #") +
   scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) +  
   scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4", "blue2", "deeppink2", "orchid1", "royalblue4", "firebrick3", "cyan3")) +
   guides(color = guide_legend(override.aes = list(size = 5))) +
@@ -203,7 +203,6 @@ al_blk_all <- ggplot(blk_data_wt, aes(x = SiO2, y = Al2O3)) +
   facet_wrap(vars(RockName)) + 
   geom_point(aes(shape = RockName, color = RockName)) +
   labs(title = "Silica vs Aluminum", x = "SiO2, Wt%", y =  "Al2O3, Wt%") +
-  scale_shape_manual(values = c(7, 8, 21:25, 10)) + 
   scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) +  
   scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4", "blue2", "deeppink2", "orchid1", "royalblue4", "firebrick3", "cyan3")) +
   guides(color = guide_legend(override.aes = list(size = 5))) +
@@ -288,27 +287,31 @@ tas <- p + annotate("text", label = "Basalt", x = 48.5, y = 2, size=4)+
 ```
 
 Plot Alkali by Rock Name - Bulk Composition
-```{r alkali by rockname, echo = FALSE, fig.dim = c(10,7)}
+```{r alkali by rockname, echo = FALSE, fig.dim = c(10,6.5)}
 final_blk_alkplot <- blk_data_wt %>%
   group_by(RockName) %>%
   ggplot(mapping = aes(x = SiO2, y = Na2O + K2O, colour = RockName, legend(cex = 0.75))) +
   geom_point(aes(shape = RockName, color = RockName)) +
+  labs(title = "Silica vs Alkali", x = "SiO2, Wt%", y = "Na2O + K2O, Wt%") +
   scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) +  
   scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4", "blue2", "deeppink2", "orchid1", "royalblue4", "firebrick3", "cyan3")) +
   guides(color = guide_legend(override.aes = list(size = 5))) +
   theme(text = element_text(size = 15),
           legend.key.size = unit(1.0, "cm"),
-          legend.title = element_text(size = 14))
+          legend.title = element_text(size = 14),
+          plot.title = element_text(hjust = 0.5))
 final_blk_alkplot
 ```
 
 
 
 Overlay Alkali Plot on TAS Diagram
-```{r overlay, echo = FALSE, fig.dim = c(10,7), fig.cap=fig.1}
+    
+    
+```{r overlay, echo = FALSE, fig.dim = c(10,6.5), fig.cap=fig.1}
 tas +
   geom_point(data = blk_data_wt, aes(x = SiO2, y = Na2O + K2O, shape = RockName, color = RockName)) +
-  labs(title = "Bulk Composition on TAS Diagram", x = "SiO2, Wt%", y = "Na2O + K2O") +
+  labs(title = "Bulk Composition on TAS Diagram", x = "SiO2, Wt%", y = "Na2O + K2O, Wt%") +
   scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) +  
   scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4", "blue2", "deeppink2", "orchid1", "royalblue4", "firebrick3", "cyan3")) +
   guides(color = guide_legend(override.aes = list(size = 5))) +
@@ -318,11 +321,10 @@ tas +
           plot.title = element_text(hjust = 0.5))
 ```
 
-    
-        
-        
 
-Now to look at plots of all rocks together
+\newpage
+
+Now to look at Harker Diagrams of all rocks plotted together
 
 
 ```{r si vs mg bulk, echo = FALSE, fig.dim = c(10,7)}
@@ -330,7 +332,7 @@ mg_blk_plot <- blk_data_wt %>%
   group_by(RockName) %>%
   ggplot(mapping = aes(SiO2, MgN, colour = RockName)) +
   geom_point(aes(shape = RockName, color = RockName, size = 3)) +
-  labs(title = "Silica vs Magnesium Number by rock", x = "SiO2, Wt%", y = "100 Mg/Mg + Fe2, Wt%") +
+  labs(title = "Silica vs Magnesium Number by rock", x = "SiO2, Wt%", y = "Mg #") +
   scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) +  
   scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4", "blue2", "deeppink2", "orchid1", "royalblue4", "firebrick3", "cyan3"))
 mg_blk_plot <- mg_blk_plot + 
@@ -555,15 +557,18 @@ alti_blk_plotp <- blk_data_wt %>%
 ggarrange(mg_blk_plotp, fe_blk_plotp, ca_blk_plotp, k_blk_plotp, ti_blk_plotp, al_blk_plotp, ncol = 2, nrow = 3, common.legend = TRUE, legend = "bottom")
 ```
 
-     
+\newpage
+
                               
                     
-Now to compare CR1A to CR1B  Harker Diagrams    
-```{r 1a to 1b bulk - si/alk, echo=FALSE, fig.dim = c(10,7)}
+Compare CR1A to CR1B  Harker Diagrams 
+    
+    
+```{r cr1 bulk - Si/Alk, echo=FALSE, fig.dim = c(10,7)}
 cr1a_cr1b_blkalk <- blk_data_wt %>%
   filter(grepl("CR1", blk_data_wt$RockName)) %>%
   ggplot(aes(SiO2, Na2O + K2O, colour = RockName)) + 
-  geom_point(aes(shape = RockName, color = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
   labs(title = "Silica vs Alkali for CR1", x = "SiO2, Wt%", y = "Na2O + K2O, Wt%") +
   scale_shape_manual(values = c(7, 8)) + 
   scale_color_manual(values = c("coral1", "chartreuse3")) + 
@@ -577,12 +582,12 @@ cr1a_cr1b_blkalk <- blk_data_wt %>%
 
 
 
-```{r 1a to 1b bulk - si/mg, echo=FALSE, fig.dim = c(10,7)}
+```{r cr1 bulk - Si/MgN, echo=FALSE, fig.dim = c(10,7)}
 cr1a_cr1b_blkmg <- blk_data_wt %>%
   filter(grepl("CR1", blk_data_wt$RockName)) %>%
   ggplot(aes(SiO2, MgN, colour = RockName)) + 
-  geom_point(aes(shape = RockName, color = RockName)) +
-  labs(title = "Silica vs Magnesium # for CR1", x = "SiO2, Wt%", y = "100 Mg/Mg + Fe2") +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  labs(title = "Silica vs Magnesium # for CR1", x = "SiO2, Wt%", y = "Mg #") +
   scale_shape_manual(values = c(7, 8)) + 
   scale_color_manual(values = c("coral1", "chartreuse3")) + 
   guides(color = guide_legend(override.aes = list(size = 5))) +
@@ -595,11 +600,11 @@ cr1a_cr1b_blkmg
 
 
 
-```{r 1a to 1b bulk - si/fe, echo=FALSE, fig.dim = c(10,7)}
+```{r cr1 bulk - Si/Fe, echo=FALSE, fig.dim = c(10,7)}
 cr1a_cr1b_blkfe <- blk_data_wt %>%
   filter(grepl("CR1", blk_data_wt$RockName)) %>%
   ggplot(aes(SiO2, FeO, colour = RockName)) + 
-  geom_point(aes(shape = RockName, color = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
   labs(title = "Silica vs Iron for CR1", x = "SiO2, Wt%", y = "FeO*, Wt%") +
   scale_shape_manual(values = c(7, 8)) + 
   scale_color_manual(values = c("coral1", "chartreuse3")) + 
@@ -613,12 +618,12 @@ cr1a_cr1b_blkfe
 
 
 
-```{r 1a to 1b bulk - Al/Ti, echo=FALSE, fig.dim = c(10,7)}
+```{r cr1 bulk - Al/Ti, echo=FALSE, fig.dim = c(10,7)}
 cr1a_cr1b_blkalti <- blk_data_wt %>%
   filter(grepl("CR1", blk_data_wt$RockName)) %>%
   ggplot(aes(Al2O3, TiO2, colour = RockName)) + 
-  geom_point(aes(shape = RockName, color = RockName)) +
-  labs(title = "Aluminum Vs Titanium for CR1", x = "Al2O3, Wt%", y = "TiO2, Wt%") +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  labs(title = "Aluminum vs Titanium for CR1", x = "Al2O3, Wt%", y = "TiO2, Wt%") +
   scale_shape_manual(values = c(7, 8)) + 
   scale_color_manual(values = c("coral1", "chartreuse3")) + 
   guides(color = guide_legend(override.aes = list(size = 5))) +
@@ -629,11 +634,153 @@ cr1a_cr1b_blkalti <- blk_data_wt %>%
 cr1a_cr1b_blkalti
 ```  
 
+    
+\newpage
 
-Taking a look at comparing CR2A to CR2B in Bulk Composition
-(bulk data for CR2 not yet available)
+        
+Compare CR2A to CR2B Harker Diagrams
+    
+        
+
+```{r cr2 bulk - Si/Alk, echo=FALSE, fig.dim = c(10,7)}
+cr2a_cr2b_blkalk <- blk_data_wt %>%
+  filter(grepl("CR2", blk_data_wt$RockName)) %>%
+  ggplot(aes(SiO2, Na2O + K2O, colour = RockName)) + 
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  labs(title = "Silica vs Alkali for CR2", x = "SiO2, Wt%", y = "Na2O + K2O, Wt%") +
+  scale_shape_manual(values = c(10, 11)) + 
+  scale_color_manual(values = c("peachpuff4", "blue2")) + 
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+cr2a_cr2b_blkalk
+```
 
 
+```{r cr2 bulk - Si/MgN, echo=FALSE, fig.dim = c(10,7)}
+cr2a_cr2b_blkmg <- blk_data_wt %>%
+  filter(grepl("CR2", blk_data_wt$RockName)) %>%
+  ggplot(aes(SiO2, MgN, colour = RockName)) + 
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  labs(title = "Silica vs Magnesium # for CR2", x = "SiO2, Wt%", y = "Mg #") +
+  scale_shape_manual(values = c(10, 11)) + 
+  scale_color_manual(values = c("peachpuff4", "blue2")) + 
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+cr2a_cr2b_blkmg
+```
+
+
+```{r cr2 bulk - Si/Fe, echo=FALSE, fig.dim = c(10,7)}
+cr2a_cr2b_blkfe <- blk_data_wt %>%
+  filter(grepl("CR2", blk_data_wt$RockName)) %>%
+  ggplot(aes(SiO2, FeO, colour = RockName)) + 
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  labs(title = "Silica vs Iron for CR2", x = "SiO2, Wt%", y = "FeO*, Wt%") + 
+   scale_shape_manual(values = c(10, 11)) + 
+  scale_color_manual(values = c("peachpuff4", "blue2")) + 
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+cr2a_cr2b_blkfe
+```
+
+
+```{r cr2 bulk - Al/Ti, echo=FALSE, fig.dim = c(10,7)} 
+cr2a_cr2b_blkalti <- blk_data_wt %>%
+  filter(grepl("CR2", blk_data_wt$RockName)) %>%
+  ggplot(aes(Al2O3, TiO2, colour = RockName)) + 
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  labs(title = "Aluminum vs Titanium for CR2", x = "Al2O3, Wt%", y = "TiO2, Wt%") +
+  scale_shape_manual(values = c(10, 11)) + 
+  scale_color_manual(values = c("peachpuff4", "blue2")) + 
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+cr2a_cr2b_blkalti
+```
+
+\newpage
+
+And finally, comparing CR1 to CR2 Harker Diagrams
+
+```{r CR1 to CR2 bulk - Si/Alk, echo=FALSE, fig.dim = c(10,7)}
+cr1_cr2_blkalk <- blk_data_wt %>%
+  filter(grepl("CR[1-2]", blk_data_wt$RockName)) %>%
+  ggplot(aes(SiO2, Na2O + K2O, colour = RockName, size = 3)) + 
+  geom_point(aes(shape = RockName, color = RockName)) +
+  labs(title = "Silica vs Alkali for CR1 & CR2", x = "SiO2, Wt%", y = "Na2O + K2O, Wt%") +
+  scale_shape_manual(values = c(7, 7, 10, 10)) + 
+  scale_color_manual(values = c("coral1", "coral1", "blue2", "blue2")) + 
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+cr1_cr2_blkalk
+```
+
+
+```{r 1 to 2 bulk - Si/MgN, echo=FALSE, fig.dim = c(10,7)}
+cr1_cr2_blkmg <- blk_data_wt %>%
+  filter(grepl("CR[1-2]", blk_data_wt$RockName)) %>%
+  ggplot(aes(SiO2, MgN, colour = RockName)) + 
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  labs(title = "Silica vs Magnesium # for CR1 & CR2", x = "SiO2, Wt%", y = "Mg #") +
+  scale_shape_manual(values = c(7, 7, 10, 10)) + 
+  scale_color_manual(values = c("coral1", "coral1", "blue2", "blue2")) + 
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+cr1_cr2_blkmg
+```
+
+
+```{r 1 to 2 bulk - Si/Fe, echo=FALSE, fig.dim = c(10,7)} 
+cr1_cr2_blkfe <- blk_data_wt %>%
+  filter(grepl("CR[1-2]", blk_data_wt$RockName)) %>%
+  ggplot(aes(SiO2, FeO, colour = RockName)) + 
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  labs(title = "Silica vs Iron for CR2", x = "SiO2, Wt%", y = "FeO*, Wt%") + 
+  scale_shape_manual(values = c(7, 7, 10, 10)) + 
+  scale_color_manual(values = c("coral1", "coral1", "blue2", "blue2")) + 
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+cr1_cr2_blkfe
+```
+
+
+```{r 1 to 2 bulk - Al/Ti, echo=FALSE, fig.dim = c(10,7)}
+cr1_cr2_blkalti <- blk_data_wt %>%
+  filter(grepl("CR[1-2]", blk_data_wt$RockName)) %>%
+  ggplot(aes(Al2O3, TiO2, colour = RockName)) + 
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  labs(title = "Aluminum vs Titanium for CR1  & CR2", x = "Al2O3, Wt%", y = "TiO2, Wt%") +
+  scale_shape_manual(values = c(7, 7, 10, 10)) + 
+  scale_color_manual(values = c("coral1", "coral1", "blue2", "blue2")) + 
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+cr1_cr2_blkalti
+```
+    
+\newpage
 
 Table indicating mean averages for elements by rock
 ```{r table1, echo = FALSE, fig.dim=c(10,7), fig.cap=tab.1}
@@ -662,9 +809,11 @@ rownames(bulk_avg_tran) <- colnames(bulk_avga)
 colnames(bulk_avg_tran) <- rownames(bulk_avga)
 rownames_to_column(bulk_avg_tran, var = "Element")
 ```
-
    
-       
+\newpage
+
+      
+Table with no Standard Deviation
        
 
 ```{r table2, echo = FALSE, fig.dim=c(10,7)}

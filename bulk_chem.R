@@ -416,7 +416,7 @@ cr2a_cr2b_blkalk <- blk_data_wt %>%
 cr2a_cr2b_blkalk
 
 
-##Create plot for looking at CR1A to CR1B Si to Mg# in bulk rock composition 
+##Create plot for looking at CR2A to CR2B Si to Mg# in bulk rock composition 
 cr2a_cr2b_blkmg <- blk_data_wt %>%
   filter(grepl("CR2", blk_data_wt$RockName)) %>%
   ggplot(aes(SiO2, MgN, colour = RockName)) + 
@@ -430,7 +430,7 @@ cr2a_cr2b_blkmg <- blk_data_wt %>%
 cr2a_cr2b_blkmg
 
 
-##Create plot for looking at CR1A to CR1B Si to Fe in bulk rock composition 
+##Create plot for looking at CR12 to CR2B Si to Fe in bulk rock composition 
 cr2a_cr2b_blkfe <- blk_data_wt %>%
   filter(grepl("CR2", blk_data_wt$RockName)) %>%
   ggplot(aes(SiO2, FeO, colour = RockName)) + 
@@ -444,7 +444,7 @@ cr2a_cr2b_blkfe <- blk_data_wt %>%
 cr2a_cr2b_blkfe
 
 
-##Create plot for looking at CR1A to CR1B Al to Ti in bulk rock composition 
+##Create plot for looking at CR2A to CR2B Al to Ti in bulk rock composition 
 cr2a_cr2b_blkalti <- blk_data_wt %>%
   filter(grepl("CR2", blk_data_wt$RockName)) %>%
   ggplot(aes(Al2O3, TiO2, colour = RockName)) + 
@@ -457,10 +457,66 @@ cr2a_cr2b_blkalti <- blk_data_wt %>%
         legend.title = element_text(size = 14))
 cr2a_cr2b_blkalti
 
+##Create plots comparing CR1 to CR2
+
+cr1_cr2_blkalk <- blk_data_wt %>%
+  filter(grepl("CR[1-2]", blk_data_wt$RockName)) %>%
+  ggplot(aes(SiO2, Na2O + K2O, colour = RockName)) + 
+  geom_point(aes(shape = RockName, color = RockName)) +
+  scale_shape_manual(values = c(7, 7, 10, 10)) + 
+  scale_color_manual(values = c("coral1", "coral1", "blue2", "blue2")) + 
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14))
+cr1_cr2_blkalk
+
+
+##Create plot for looking at CR1 to CR2 Si to Mg# in bulk rock composition 
+cr1_cr2_blkmg <- blk_data_wt %>%
+  filter(grepl("CR[1-2]", blk_data_wt$RockName)) %>%
+  ggplot(aes(SiO2, MgN, colour = RockName)) + 
+  geom_point(aes(shape = RockName, color = RockName)) +
+  scale_shape_manual(values = c(7, 7, 10, 10)) + 
+  scale_color_manual(values = c("coral1", "coral1", "blue2", "blue2")) + 
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14))
+cr1_cr2_blkmg
+
+
+##Create plot for looking at CR1 to CR2 Si to Fe in bulk rock composition 
+cr1_cr2_blkfe <- blk_data_wt %>%
+  filter(grepl("CR[1-2]", blk_data_wt$RockName)) %>%
+  ggplot(aes(SiO2, FeO, colour = RockName)) + 
+  geom_point(aes(shape = RockName, color = RockName)) +
+  scale_shape_manual(values = c(7, 7, 10, 10)) + 
+  scale_color_manual(values = c("coral1", "coral1", "blue2", "blue2")) + 
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14))
+cr1_cr2_blkfe
+
+
+##Create plot for looking at CR1 to CR2 Al to Ti in bulk rock composition 
+cr1_cr2_blkalti <- blk_data_wt %>%
+  filter(grepl("CR[1-2]", blk_data_wt$RockName)) %>%
+  ggplot(aes(Al2O3, TiO2, colour = RockName)) + 
+  geom_point(aes(shape = RockName, color = RockName)) +
+  scale_shape_manual(values = c(7, 7, 10, 10)) + 
+  scale_color_manual(values = c("coral1", "coral1", "blue2", "blue2")) + 
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14))
+cr1_cr2_blkalti
+
 
 
 ##Create table for mean for each rock
-#I like this better - cleaner
+#I like this better - cleaner but sd not included
 bulk_avg <- blk_data_wt %>%
   group_by(RockName) %>% ##break into ind rocks
   summarise(n = n(), "SiO2" = mean(SiO2), "TiO2" = mean(TiO2),

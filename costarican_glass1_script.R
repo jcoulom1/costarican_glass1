@@ -49,7 +49,7 @@ rock_data[rock_data == ""] <- NA
 rock_data_wt <- rock_data %>%
   select("RockName":"Total", "MgN") %>%  #choose relevant columns
   filter(Total > 95.0 & Total < 101.0) %>% #select rows based on Total
-  filter(is.na(V2O3) & SiO2 < 90.0 & Al2O3 < 22.0 & Al2O3 > 10.0 & K2O > 1.0) #select rows based on elements
+  filter(is.na(V2O3) & SiO2 < 90.0 & SiO2 > 40 & Al2O3 < 22.0 & Al2O3 > 10.0 & K2O > 1.0) #select rows based on elements
 
 
 

@@ -32,3 +32,6 @@ Added data for 2nd batch of bulk rocks (from Allen).  Updated all code
 to include rocks CR2A_T (first 2A was not fully fused) CR2A_M (redo of 2A),
 CR2B, CR4 and CR5. Changed colors and added a shape to accomodate all new data.
 Also created code for comparision of CR2A to CR2B.
+
+Proofread all labels for consistency and updated shapes & colors on glass Rmd
+to match bulk.
