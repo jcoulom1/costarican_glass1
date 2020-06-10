@@ -12,20 +12,16 @@ output:
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
 cr_data <- read.csv("data/wt%_probe_data.csv")
 library(dbplyr)
 library(tidyverse)
-library(tinytex)
-library(huxtable)
-library(flextable)
-library(kableExtra)
 library(gridExtra)
-library(ggpubr)
-library(captioner)
 library(data.table)
 library(captioner)
 library(furniture)
+library(ggpubr)
+library(huxtable)
 options(warn = 2)
 ```
 
@@ -52,8 +48,8 @@ blk_cr1b <- bulk_data %>%
 blk_cr2a_t <- bulk_data %>%
   filter(grepl("CR2A_T", bulk_data$Comment)) %>%
   mutate("RockName" = "CR2A_T")
-blk_cr2a <- bulk_data %>%
-  filter(grepl("CR2A", bulk_data$Comment)) %>%
+blk_cr2a_m <- bulk_data %>%
+  filter(grepl("CR2A_M", bulk_data$Comment)) %>%
   mutate("RockName" = "CR2A")
 blk_cr2b <- bulk_data %>%
   filter(grepl("CR2B", bulk_data$Comment)) %>%
@@ -76,7 +72,7 @@ blk_cr7 <- bulk_data %>%
 ```
 
 ```{r grp blk rocks together, include=FALSE}
-blk_data <- rbind(blk_cr1a, blk_cr1b, blk_cr2a, blk_cr2b, blk_cr3, blk_cr4, blk_cr5, blk_cr6, blk_cr7)
+blk_data <- rbind(blk_cr1a, blk_cr1b, blk_cr2a_m, blk_cr2b, blk_cr3, blk_cr4, blk_cr5, blk_cr6, blk_cr7)
 blk_data <- blk_data[,c(29, 23, 2:15)]
 blk_data <- blk_data %>% 
   mutate("MgN" = ((MgO / (40.31)) / ((MgO / (40.31)) + (FeO / (71.85)))) * (100))
@@ -458,7 +454,7 @@ alti_blk_plot
       
                
     
-        
+
         
  
 ```{r si vs mg fig, include = FALSE, fig.dim = c(10,7)}
@@ -716,8 +712,8 @@ And finally, comparing CR1 to CR2 Harker Diagrams
 ```{r CR1 to CR2 bulk - Si/Alk, echo=FALSE, fig.dim = c(10,7)}
 cr1_cr2_blkalk <- blk_data_wt %>%
   filter(grepl("CR[1-2]", blk_data_wt$RockName)) %>%
-  ggplot(aes(SiO2, Na2O + K2O, colour = RockName, size = 3)) + 
-  geom_point(aes(shape = RockName, color = RockName)) +
+  ggplot(aes(SiO2, Na2O + K2O, colour = RockName)) + 
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
   labs(title = "Silica vs Alkali for CR1 & CR2", x = "SiO2, Wt%", y = "Na2O + K2O, Wt%") +
   scale_shape_manual(values = c(7, 7, 10, 10)) + 
   scale_color_manual(values = c("coral1", "coral1", "blue2", "blue2")) + 
