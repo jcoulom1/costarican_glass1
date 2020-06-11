@@ -39,3 +39,6 @@ to match bulk.
 
 worked through comparing script file to rmd to be sure code matched chunks
 (script was out of date with rmd)
+
+updated glass script to match glass rmd and removed code that did not work.
+(above code was for comparing bulk script to bulk rmd)

@@ -29,7 +29,7 @@ options(warn = 2)
 
 ```{r bulk setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
-bulk_data <- read.csv("data/bulk_comp_data.csv")
+bulk_data <- read.csv("data/bulk_comp_data_a.csv")
 table_nums <- captioner(prefix = "Table")
 figure_nums <- captioner(prefix = "Figure")
 fig.1 <- figure_nums(name = "fig_1", caption = "TAS Diagram for bulk rock compositions")
@@ -77,7 +77,6 @@ blk_data <- blk_data[,c(29, 23, 2:15)]
 blk_data <- blk_data %>% 
   mutate("MgN" = ((MgO / (40.31)) / ((MgO / (40.31)) + (FeO / (71.85)))) * (100))
 blk_data$RockName <- as.factor(blk_data$RockName)
-
 ```
 
 
@@ -458,7 +457,7 @@ alti_blk_plot
         
  
 ```{r si vs mg fig, include = FALSE, fig.dim = c(10,7)}
-mg_blk_plotp <- blk_data_wt %>%
+mg_blk_plotp <- blk_data_wt %>%  ##need to reprint all plots w altered themes to pull together.
   group_by(RockName) %>%
   ggplot(mapping = aes(SiO2, MgN, colour = RockName)) +
   geom_point(aes(shape = RockName, color = RockName)) +

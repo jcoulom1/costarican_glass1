@@ -10,8 +10,9 @@ library(gridExtra)
 library(data.table)
 library(captioner)
 library(furniture)
+library(ggpubr)
 
-bulk_data <- read.csv("C:/Users/labry/Documents/R/costarican_glass1/data/bulk_comp_data.csv")
+bulk_data <- read.csv("C:/Users/labry/Documents/R/costarican_glass1/data/bulk_comp_data_a.csv")
 table_nums <- captioner(prefix = "Table")
 figure_nums <- captioner(prefix = "Figure")
 

@@ -18,10 +18,8 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 cr_data <- read.csv("data/wt%_probe_data.csv")
 library(dplyr)
 library(tidyverse)
-library(tinytex)
 library(huxtable)
-library(flextable)
-library(kableExtra)
+options(warn = 2)
 ```
 
 
@@ -296,8 +294,6 @@ mg_plot + scale_x_continuous(limits = c(50, 80))
 
 
 
-    
-    
 ```{r si vs fe, echo = FALSE, fig.dim = c(10,7)}
 fe_plot <- rock_data_wt %>%
   group_by(RockName) %>%
@@ -331,6 +327,24 @@ ca_plot <- ca_plot +
           legend.title = element_text(size = 14),
           plot.title = element_text(hjust = 0.5))
 ca_plot + scale_x_continuous(limits = c(50, 80))
+```
+
+
+```{r si vs ti, echo = FALSE, fig.dim = c(10,7)}
+ti_plot <- rock_data_wt %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(SiO2, TiO2, colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  labs(title = "Silica vs Aluminum", x = "SiO2, Wt%", y = "TiO2, Wt%") +
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4", "blue2", "deeppink2", "orchid1", "royalblue4", "firebrick3", "cyan3"))
+ti_plot <- ti_plot + 
+    guides(color = guide_legend(override.aes = list(size = 5))) + 
+    theme(text = element_text(size = 15),
+          legend.key.size = unit(1.0, "cm"),
+          legend.title = element_text(size = 14),
+          plot.title = element_text(hjust = 0.5))
+ti_plot + scale_x_continuous(limits = c(50, 80))
 ```
 
 
@@ -371,27 +385,6 @@ alti_plot
 
 
 \newpage
-
-
-A table comparing mean and standard deviation of Aluminum and Titanium     
-
-
-```{r table for mean and sd, include=FALSE}
-al_ti_tb <- rock_data_wt %>%
-  group_by(RockName) %>%
-  summarize(Al2O3mn = mean(Al2O3), Al2O3sd = sd(Al2O3), 
-            TiO2mn = mean(TiO2), TiO2sd = sd(TiO2))
-```
-
-```{r print alti table, echo=FALSE}
-alti_hux <- hux(al_ti_tb) %>%
-  add_colnames() %>%
-  set_bold(row = 1, col = everywhere, value = TRUE) %>%
-  set_number_format(2:9, 2:5, 3) %>%
-  set_col_width(1) %>%
-  set_all_borders(TRUE)
-alti_hux
-```
 
 Table laying out representative glass samples
 
