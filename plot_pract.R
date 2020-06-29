@@ -9,52 +9,124 @@ library(dplyr)
 library(arsenal) ## not helpful
 library(furniture)
 
-  bulk_data <- read.csv("C:/Users/labry/Documents/R/costarican_glass1/data/bulk_comp_data.csv")
+bulk_data <- read.csv("C:/Users/labry/Documents/R/costarican_glass1/data/bulk_comp_data_a.csv")
   
   #Create new columns for RockName
-  bulk_data$Comment <- as.character(bulk_data$Comment)
-  blk_cr1a <- bulk_data %>%
+bulk_data$Comment <- as.character(bulk_data$Comment)
+blk_cr1a <- bulk_data %>%
     filter(grepl("CR1A", bulk_data$Comment)) %>% #filter for rock
     mutate("RockName" = "CR1A")  #add column for rockname
-  blk_cr1b <- bulk_data %>%
-    filter(grepl("CR1B", bulk_data$Comment)) %>%
-    mutate("RockName" = "CR1B")
-  blk_cr2a_t <- bulk_data %>%
-    filter(grepl("CR2A_T", bulk_data$Comment)) %>%
-    mutate("RockName" = "CR2A_T")
-  blk_cr2a_m <- bulk_data %>%
-    filter(grepl("CR2A_M", bulk_data$Comment)) %>%
-    mutate("RockName" = "CR2A_M")
-  blk_cr2b <- bulk_data %>%
-    filter(grepl("CR2B", bulk_data$Comment)) %>%
-    mutate("RockName" = "CR2B")
-  blk_cr3 <- bulk_data %>%
-    filter(grepl("CR3", bulk_data$Comment)) %>%
-    mutate("RockName" = "CR3")
-  blk_cr4 <- bulk_data %>%
-    filter(grepl("CR4", bulk_data$Comment)) %>%
-    mutate("RockName" = "CR4")
-  blk_cr5 <- bulk_data %>%
+blk_cor1a <- bulk_data %>%
+    filter(grepl("COR1A", bulk_data$Comment)) %>%
+    mutate("RockName" = "COR1A")
+blk_cr5 <- bulk_data %>%
     filter(grepl("CR5", bulk_data$Comment)) %>%
     mutate("RockName" = "CR5")
-  blk_cr6 <- bulk_data %>%
+blk_cor5 <- bulk_data %>%
+    filter(grepl("COR5", bulk_data$Comment)) %>%
+    mutate("RockName" = "COR5")
+blk_cr6 <- bulk_data %>%
     filter(grepl("CR6", bulk_data$Comment)) %>%
     mutate("RockName" = "CR6")
-  blk_cr7 <- bulk_data %>%
-    filter(grepl("CR7", bulk_data$Comment)) %>%
-    mutate("RockName" = "CR7")
-  blk_data <- rbind(blk_cr1a, blk_cr1b, blk_cr2a_t, blk_cr2a_m, blk_cr2b, blk_cr3, blk_cr4, blk_cr5, blk_cr6, blk_cr7) #pull all df's together w/ 1 col for rockname
-  blk_data <- blk_data[,c(29, 23, 2:15)] #reorder the columns and limit to relevant ones
-  blk_data <- blk_data %>%  #add column w/ Mg# calculated
+blk_cor6 <- bulk_data %>%
+    filter(grepl("COR6", bulk_data$Comment)) %>%
+    mutate("RockName" = "COR6")
+blk_data <- rbind(blk_cr1a, blk_cor1a, blk_cr5, blk_cor5, blk_cr6, blk_cor6) #pull all df's together w/ 1 col for rockname
+blk_data <- blk_data[,c(29, 23, 2:15)] #reorder the columns and limit to relevant ones
+blk_data <- blk_data %>%  #add column w/ Mg# calculated
     mutate("MgN" = ((MgO / (40.31)) / ((MgO / (40.31)) + (FeO / (71.85)))) * (100))
-  blk_data$RockName <- as.factor(blk_data$RockName) #coerce col to factor (I forget why this was needed)
+blk_data$RockName <- as.factor(blk_data$RockName) #coerce col to factor (I forget why this was needed)
   
   
-  blk_data_wt <- blk_data %>%
+blk_data_wt <- blk_data %>%
     select("RockName":"Total", "MgN") %>%  #choose relevant columns
     filter(Total > 98.0 & Total < 101.0) #select rows based on Total
   #leave off last line of this due to bulk not requiring as many constraints
+
+## find way to plot averages on all rather than all points
+gls_avg <- rock_data_wt %>% #first create new table containing avg's
+  group_by(RockName) %>%
+  summarise("SiO2" = mean(SiO2), "TiO2" = mean(TiO2),
+            "Al2O3" = mean(Al2O3), "Cr" = mean(Cr2O3),
+            "MgO" = mean(MgO), "CaO" = mean(CaO), "MnO" = mean(MnO),
+            "FeO" = mean(FeO), "Na2O" = mean(Na2O), "K2O" = mean(K2O),
+            "S" = mean(S), "P2O5" = mean(P2O5), "MgN" = mean(MgN),
+            "Total" = mean(Total))
+#now try against plot
+mg_avg_plot <- gls_avg %>%
+  ggplot(mapping = aes(SiO2, MgN, colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName), size = 3) +
+  labs(title = "Silica vs Magnesium Number Mean by rock", x = "SiO2, Wt%", y = "Mg #") +
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) +  
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3", 
+                                "royalblue4", "firebrick3", "cyan3"))
+
+mg_avg_plot <- mg_avg_plot + 
+  guides(color = guide_legend(override.aes = list(size = 5))) + 
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+mg_avg_plot + scale_x_continuous(limits = c(55,80)) #sets x axis boundaries
+
+
+
+
+
+## compare orig smpl data (cr) to new samples (cor)  
+cr1A_cor1A_blkalk <- blk_data_wt %>%
+    filter(grepl("1A", blk_data_wt$RockName, ignore.case = TRUE)) %>%
+    ggplot(aes(SiO2, Na2O + K2O, colour = RockName)) + 
+    geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+    labs(title = "Silica vs Alkali for CR1 & COR1A", x = "SiO2, Wt%", y = "Na2O + K2O, Wt%") +
+    scale_shape_manual(values = c(7, 10)) + 
+    scale_color_manual(values = c("coral1", "blue2")) + 
+    guides(color = guide_legend(override.aes = list(size = 5))) +
+    theme(text = element_text(size = 15),
+          legend.key.size = unit(1.0, "cm"),
+          legend.title = element_text(size = 14),
+          plot.title = element_text(hjust = 0.5))
+cr1A_cor1A_blkalk
+
+
+cr6_cor6_blkalk <- blk_data_wt %>%
+  filter(grepl("6", blk_data_wt$RockName)) %>%
+  ggplot(aes(SiO2, Na2O + K2O, colour = RockName)) + 
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  labs(title = "Silica vs Alkali for CR6 & COR6", x = "SiO2, Wt%", y = "Na2O + K2O, Wt%") +
+  scale_shape_manual(values = c(7, 10)) + 
+  scale_color_manual(values = c("coral1", "blue2")) + 
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+cr6_cor6_blkalk
+
+cr5_cor5_blkalk <- blk_data_wt %>%
+  filter(grepl("5", blk_data_wt$RockName)) %>%
+  ggplot(aes(SiO2, Na2O + K2O, colour = RockName)) + 
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  labs(title = "Silica vs Alkali for CR5 & COR5", x = "SiO2, Wt%", y = "Na2O + K2O, Wt%") +
+  scale_shape_manual(values = c(7, 10)) + 
+  scale_color_manual(values = c("coral1", "blue2")) + 
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+cr5_cor5_blkalk
   
+## Compare averages and sd's of new samples to old
+mean <- blk_data_wt %>%
+  group_by(RockName) %>%
+  summarise(n = n(),
+            "M SiO2" = mean(SiO2), "SD SiO2" = sd(SiO2),
+            "M TiO2" = mean(TiO2), "SD TiO2" = sd(TiO2),
+            "M Al2O3" = mean(Al2O3), "SD Al2O3" = sd(Al2O3))
+print(mean)
+
   
   #using arsenal package to create table
   #this didn't really work, no way to list elements well

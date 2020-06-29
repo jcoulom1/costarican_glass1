@@ -42,3 +42,6 @@ worked through comparing script file to rmd to be sure code matched chunks
 
 updated glass script to match glass rmd and removed code that did not work.
 (above code was for comparing bulk script to bulk rmd)
+
+created new df for glass average per wt% and created plot for alkali
+and alkali on TAS on both script and rmd files

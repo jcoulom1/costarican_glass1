@@ -35,11 +35,14 @@ rock_cr4 <- cr_data %>%
 rock_cr5 <- cr_data %>%
   filter(grepl("CR5", cr_data$Comment)) %>%
   mutate("RockName" = "CR5")
+rock_cr6 <- cr_data %>%
+  filter(grepl("CR6", cr_data$Comment)) %>%
+  mutate("RockName" = "CR6")
 rock_cr7 <- cr_data %>%
   filter(grepl("CR7", cr_data$Comment)) %>%
   mutate("RockName" = "CR7")
 rock_data <- rbind(rock_cr1a, rock_cr1b, rock_cr2a, rock_cr2b, rock_cr3,
-                   rock_cr4, rock_cr5, rock_cr7) #pull all sheets together
+                   rock_cr4, rock_cr5, rock_cr6, rock_cr7) #pull all sheets together
 #to create one sheet with new column for all the rock names
 rock_data <- rock_data[,c(30, 24, 2:16)] #reorder columns keeping what's needed
 rock_data <- rock_data %>%
@@ -62,7 +65,9 @@ alkali_plot <- ggplot(rock_data_wt, aes(x = SiO2, y = Na2O + K2O)) +
   geom_point(aes(shape = RockName, color = RockName)) +
   labs(title = "Silice vs Alkali", x = "SiO2, Wt%", y = "Na2O + K2O, Wt%") +
   scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4", "blue2", "deeppink2", "orchid1", "royalblue4", "firebrick3", "cyan3")) +
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3", 
+                                "royalblue4", "firebrick3", "cyan3")) +
   guides(color = guide_legend(override.aes = list(size = 5))) +
   theme(text = element_text(size = 15),
         legend.key.size = unit(1.0, "cm"),
@@ -76,7 +81,9 @@ mg_plot_all <- ggplot(rock_data_wt, aes(x = SiO2, y = MgN)) +
   geom_point(aes(shape = RockName, color = RockName)) +
   labs(title = "Silica vs Magnesium Number", x = "SiO2, Wt%", y = "Mg #") + 
   scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4", "blue2", "deeppink2", "orchid1", "royalblue4", "firebrick3", "cyan3")) +
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3",
+                                "royalblue4", "firebrick3", "cyan3")) +
   guides(color = guide_legend(override.aes = list(size = 5))) +
   theme(text = element_text(size = 15),
         legend.key.size = unit(1.0, "cm"),
@@ -91,7 +98,9 @@ fe_plot_all <- ggplot(rock_data_wt, aes(x = SiO2, y = FeO)) +
   geom_point(aes(shape = RockName, color = RockName)) +
   labs(title = "Silica vs Iron", x = "SiO2, Wt%", y = "FeO*, Wt%") +
   scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4", "blue2", "deeppink2", "orchid1", "royalblue4", "firebrick3", "cyan3")) +
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3",
+                                "royalblue4", "firebrick3", "cyan3")) +
   guides(color = guide_legend(override.aes = list(size = 5))) +
   theme(text = element_text(size = 15),
         legend.key.size = unit(1.0, "cm"),
@@ -105,7 +114,9 @@ ca_plot_all <- ggplot(rock_data_wt, aes(x = SiO2, y = CaO)) +
   geom_point(aes(shape = RockName, color = RockName)) +
   labs(title = "Silica vs Calcium", x = "SiO2, Wt%", y = "CaO, Wt%") + 
   scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4", "blue2", "deeppink2", "orchid1", "royalblue4", "firebrick3", "cyan3")) +
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3",
+                                "royalblue4", "firebrick3", "cyan3")) +
   guides(color = guide_legend(override.aes = list(size = 5))) +
   theme(text = element_text(size = 15),
         legend.key.size = unit(1.0, "cm"),
@@ -120,7 +131,9 @@ al_plot_all <- ggplot(rock_data_wt, aes(x = SiO2, y = Al2O3)) +
   geom_point(aes(shape = RockName, color = RockName)) +
   labs(title = "Silica vs Aluminum", x = "SiO2, Wt%", y = "Al2O3, Wt%") + 
   scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4", "blue2", "deeppink2", "orchid1", "royalblue4", "firebrick3", "cyan3")) +
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3",
+                                "royalblue4", "firebrick3", "cyan3")) +
   guides(color = guide_legend(override.aes = list(size = 5))) +
   theme(text = element_text(size = 15),
         legend.key.size = unit(1.0, "cm"),
@@ -135,7 +148,9 @@ alti_plot_all <- ggplot(rock_data_wt, aes(x = Al2O3, y = TiO2)) +
   geom_point(aes(shape = RockName, color = RockName)) +
   labs(title = "Aluminum vs Titanium", x = "Al2O3 Wt%", y = "TiO2 Wt%") +
   scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4", "blue2", "deeppink2", "orchid1", "royalblue4", "firebrick3", "cyan3")) +
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3",
+                                "royalblue4", "firebrick3", "cyan3")) +
   guides(color = guide_legend(override.aes = list(size = 5))) +
   theme(text = element_text(size = 15),
         legend.key.size = unit(1.0, "cm"),
@@ -198,20 +213,22 @@ tas <- p + annotate("text", label = "Basalt", x = 48.5, y = 2, size=4)+
   annotate("text", label = "Foidite", x = 45, y = 12, size=4)
 tas
 
-#plot alkali by rock name
-final_alkplot <- rock_data_wt %>%
-  group_by(RockName) %>%
+
+#plot alkali by rockname - all points
+rock_alkplot <-  rock_data_wt %>%
   ggplot(mapping = aes(x = SiO2, y = Na2O + K2O, colour = RockName, legend(cex = 0.75))) +
   geom_point(aes(shape = RockName, color = RockName, size = 2)) +
   labs(title = "Alkali by Rock Name", x = "SiO2, Wt%", y = "Na2O + K2O, Wt%") +
   scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4", "blue2", "deeppink2", "orchid1", "royalblue4", "firebrick3", "cyan3")) +
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3",
+                                "royalblue4", "firebrick3", "cyan3")) +
   guides(color = guide_legend(override.aes = list(size = 5))) +
   theme(text = element_text(size = 15),
         legend.key.size = unit(1.0, "cm"),
         legend.title = element_text(size = 14),
         plot.title = element_text(hjust = 0.5))
-final_alkplot
+rock_alkplot
 
 
 # use rock_data to add points to the tas diagram
@@ -219,7 +236,52 @@ tas +
   geom_point(data = rock_data_wt, aes(x = SiO2, y = Na2O + K2O, shape = RockName, color = RockName)) +
   labs(title = "Rocks Plotted on TAS Diagram", x = "SiO2, Wt%", y = "Na2O + K2O, Wt%") +
   scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4", "blue2", "deeppink2", "orchid1", "royalblue4", "firebrick3", "cyan3")) + 
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3",
+                                "royalblue4", "firebrick3", "cyan3")) + 
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+
+
+## create table for glass averages per rock
+gls_avg <- rock_data_wt %>%
+  group_by(RockName) %>%
+  summarise("SiO2" = mean(SiO2), "TiO2" = mean(TiO2),
+            "Al2O3" = mean(Al2O3), "Cr" = mean(Cr2O3),
+            "MgO" = mean(MgO), "CaO" = mean(CaO), "MnO" = mean(MnO),
+            "FeO" = mean(FeO), "Na2O" = mean(Na2O), "K2O" = mean(K2O),
+            "S" = mean(S), "P2O5" = mean(P2O5), "MgN" = mean(MgN),
+            "Total" = mean(Total))
+
+
+#plot average alkali by rock name
+avg_alkplot <- gls_avg %>%
+  ggplot(mapping = aes(x = SiO2, y = Na2O + K2O, colour = RockName, legend(cex = 0.75))) +
+  geom_point(aes(shape = RockName, color = RockName, size = 2)) +
+  labs(title = "Alkali by Rock Name", x = "SiO2, Wt%", y = "Na2O + K2O, Wt%") +
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3",
+                                "royalblue4", "firebrick3", "cyan3")) +
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+avg_alkplot
+
+
+# use rock_data to add points to the tas diagram
+tas +
+  geom_point(data = gls_avg, aes(x = SiO2, y = Na2O + K2O, shape = RockName, color = RockName)) +
+  labs(title = "Rocks Plotted on TAS Diagram", x = "SiO2, Wt%", y = "Na2O + K2O, Wt%") +
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3",
+                                "royalblue4", "firebrick3", "cyan3")) + 
   guides(color = guide_legend(override.aes = list(size = 5))) +
   theme(text = element_text(size = 15),
         legend.key.size = unit(1.0, "cm"),
@@ -234,7 +296,9 @@ mg_plot <- rock_data %>%
   geom_point(aes(shape = RockName, color = RockName, size = 3)) +
   labs(title = "Silica vs Magnesium", x = "SiO2, Wt%", y = "Mg #") +
   scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4", "blue2", "deeppink2", "orchid1", "royalblue4", "firebrick3", "cyan3"))
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3",
+                                "royalblue4", "firebrick3", "cyan3"))
 mg_plot <- mg_plot + 
   guides(color = guide_legend(override.aes = list(size = 5))) + 
   theme(text = element_text(size = 15),
@@ -251,7 +315,9 @@ fe_plot <- rock_data_wt %>%
   geom_point(aes(shape = RockName, color = RockName, size = 3)) +
   labs(title = "Silica vs Iron", x = "SiO2, Wt%", y = "FeO*, Wt%") +
   scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4", "blue2", "deeppink2", "orchid1", "royalblue4", "firebrick3", "cyan3"))
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3",
+                                "royalblue4", "firebrick3", "cyan3"))
 fe_plot <- fe_plot + 
   guides(color = guide_legend(override.aes = list(size = 5))) +
   theme(text = element_text(size = 15),
@@ -268,7 +334,9 @@ ca_plot <- rock_data_wt %>%
   geom_point(aes(shape = RockName, color = RockName, size = 3)) +
   labs(title = "Silica vs Calcium", x = "SiO2, Wt%", y = "CaO, Wt%") +
   scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4", "blue2", "deeppink2", "orchid1", "royalblue4", "firebrick3", "cyan3"))
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3",
+                                "royalblue4", "firebrick3", "cyan3"))
 ca_plot <- ca_plot + 
   guides(color = guide_legend(override.aes = list(size = 5))) + 
   theme(text = element_text(size = 15),
@@ -285,7 +353,9 @@ ti_plot <- rock_data %>%
   geom_point(aes(shape = RockName, color = RockName, size = 3)) +
   labs(title = "Silica vs Aluminum", x = "SiO2, Wt%", y = "TiO2, Wt%") +
   scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4", "blue2", "deeppink2", "orchid1", "royalblue4", "firebrick3", "cyan3"))
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3",
+                                "royalblue4", "firebrick3", "cyan3"))
 ti_plot <- ti_plot + 
   guides(color = guide_legend(override.aes = list(size = 5))) + 
   theme(text = element_text(size = 15),
@@ -302,7 +372,9 @@ al_plot <- rock_data %>%
   geom_point(aes(shape = RockName, color = RockName, size = 3)) +
   labs(title = "Silica vs Aluminum", x = "SiO2, Wt%", y = "Al2O3, Wt%") +
   scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4", "blue2", "deeppink2", "orchid1", "royalblue4", "firebrick3", "cyan3"))
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3",
+                                "royalblue4", "firebrick3", "cyan3"))
 al_plot <- al_plot + 
   guides(color = guide_legend(override.aes = list(size = 5))) + 
   theme(text = element_text(size = 15),
@@ -319,7 +391,9 @@ alti_plot <- rock_data_wt %>%
   geom_point(aes(shape = RockName, color = RockName, size = 3)) +
   labs(title = "Aluminum vs Titanium", x = "Al2O3, Wt%", y = "TiO2, Wt%") +
   scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4", "blue2", "deeppink2", "orchid1", "royalblue4", "firebrick3", "cyan3"))
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3",
+                                "royalblue4", "firebrick3", "cyan3"))
 alti_plot <- alti_plot + 
   guides(color = guide_legend(override.aes = list(size = 5))) +
   theme(text = element_text(size = 15),
@@ -327,6 +401,46 @@ alti_plot <- alti_plot +
         legend.title = element_text(size = 14),
         plot.title = element_text(hjust = 0.5))
 alti_plot
+
+#create table for averages per rock
+gls_avg <- rock_data_wt %>% #first create new table containing avg's
+  group_by(RockName) %>%
+  summarise("SiO2" = mean(SiO2), "TiO2" = mean(TiO2),
+            "Al2O3" = mean(Al2O3), "Cr" = mean(Cr2O3),
+            "MgO" = mean(MgO), "CaO" = mean(CaO), "MnO" = mean(MnO),
+            "FeO" = mean(FeO), "Na2O" = mean(Na2O), "K2O" = mean(K2O),
+            "S" = mean(S), "P2O5" = mean(P2O5), "MgN" = mean(MgN),
+            "Total" = mean(Total))
+
+## plot averages of all glass per rock
+tas +
+  geom_point(data = gls_avg, aes(x = SiO2, y = Na2O + K2O, shape = RockName, color = RockName)) +
+  labs(title = "Rocks Plotted on TAS Diagram", x = "SiO2, Wt%", y = "Na2O + K2O, Wt%") +
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4", "blue2", "deeppink2", "orchid3", "royalblue4", "firebrick3", "cyan3")) + 
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+
+
+mg_avg_plot <- gls_avg %>%
+  ggplot(mapping = aes(SiO2, MgN, colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName), size = 3) +
+  labs(title = "Silica vs Magnesium Number Mean by rock", x = "SiO2, Wt%", y = "Mg #") +
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) +  
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3", 
+                                "royalblue4", "firebrick3", "cyan3"))
+
+mg_avg_plot <- mg_avg_plot + 
+  guides(color = guide_legend(override.aes = list(size = 5))) + 
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+mg_avg_plot + scale_x_continuous(limits = c(55,80))
 
 #attempt at table showing mean and sd of al vs ti using huxtable
 al_ti_tb <- rock_data_wt %>%
@@ -358,9 +472,6 @@ cr_table1 <- cr_data2_trans2 %>%
 cr_table1_tb <- rownames_to_column(cr_table1, var = "wt %") %>%
   as.tibble()
 cr_table1_tb
-
-
-
 
 
 ## Plot 1A to 1B - Si to Alkali
@@ -448,3 +559,5 @@ cr_data2_trans2 <- as.data.frame(cr_data2_trans)
 cr_table1 <- cr_data2_trans2 %>%  ##creates table w/ specific samples chosen
   select("CR1A2_2 Pt1", "CR1B_1 Pt15", "CR2A2_3 PT1", "CR2B2_1 PT2", "CR31_3 PT7", "CR42_1 PT6", "CR51_2 PT5", "CR72_3 Pt1") %>%
   drop_na() ##drops the rows w/ na
+
+
