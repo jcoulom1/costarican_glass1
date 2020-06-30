@@ -43,6 +43,16 @@ blk_data_wt <- blk_data %>%
     filter(Total > 98.0 & Total < 101.0) #select rows based on Total
   #leave off last line of this due to bulk not requiring as many constraints
 
+## find way to enter polynomic equation for Alkali vs Subalkali
+A <- blk_data_wt$Na2O + blk_data_wt$K2O
+
+poly <- -3.3539e-4 * A^6 + 1.2030e-2 * A^5 - 1.5188e-1 * A^4 +
+  8.6096e-1 * A^3 - 2.1111 * A^2 + 3.9492 * A + 39.0
+
+blk_data_wt$SiO2 >= poly
+
+blk_data_wt$SiO2 >= poly
+
 ## find way to plot averages on all rather than all points
 gls_avg <- rock_data_wt %>% #first create new table containing avg's
   group_by(RockName) %>%

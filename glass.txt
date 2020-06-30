@@ -45,3 +45,7 @@ updated glass script to match glass rmd and removed code that did not work.
 
 created new df for glass average per wt% and created plot for alkali
 and alkali on TAS on both script and rmd files
+
+added the rest of the glass average plots to the glass rmd and used plot practice
+to work out a formula for Alkaline vs Subalkaline based on wt% df
+

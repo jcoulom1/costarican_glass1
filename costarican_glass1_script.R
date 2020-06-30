@@ -246,47 +246,6 @@ tas +
         plot.title = element_text(hjust = 0.5))
 
 
-## create table for glass averages per rock
-gls_avg <- rock_data_wt %>%
-  group_by(RockName) %>%
-  summarise("SiO2" = mean(SiO2), "TiO2" = mean(TiO2),
-            "Al2O3" = mean(Al2O3), "Cr" = mean(Cr2O3),
-            "MgO" = mean(MgO), "CaO" = mean(CaO), "MnO" = mean(MnO),
-            "FeO" = mean(FeO), "Na2O" = mean(Na2O), "K2O" = mean(K2O),
-            "S" = mean(S), "P2O5" = mean(P2O5), "MgN" = mean(MgN),
-            "Total" = mean(Total))
-
-
-#plot average alkali by rock name
-avg_alkplot <- gls_avg %>%
-  ggplot(mapping = aes(x = SiO2, y = Na2O + K2O, colour = RockName, legend(cex = 0.75))) +
-  geom_point(aes(shape = RockName, color = RockName, size = 2)) +
-  labs(title = "Alkali by Rock Name", x = "SiO2, Wt%", y = "Na2O + K2O, Wt%") +
-  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
-                                "blue2", "deeppink2", "orchid3",
-                                "royalblue4", "firebrick3", "cyan3")) +
-  guides(color = guide_legend(override.aes = list(size = 5))) +
-  theme(text = element_text(size = 15),
-        legend.key.size = unit(1.0, "cm"),
-        legend.title = element_text(size = 14),
-        plot.title = element_text(hjust = 0.5))
-avg_alkplot
-
-
-# use rock_data to add points to the tas diagram
-tas +
-  geom_point(data = gls_avg, aes(x = SiO2, y = Na2O + K2O, shape = RockName, color = RockName)) +
-  labs(title = "Rocks Plotted on TAS Diagram", x = "SiO2, Wt%", y = "Na2O + K2O, Wt%") +
-  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
-                                "blue2", "deeppink2", "orchid3",
-                                "royalblue4", "firebrick3", "cyan3")) + 
-  guides(color = guide_legend(override.aes = list(size = 5))) +
-  theme(text = element_text(size = 15),
-        legend.key.size = unit(1.0, "cm"),
-        legend.title = element_text(size = 14),
-        plot.title = element_text(hjust = 0.5))
 
 ## show all rocks on one plot
 #plot sio2 vs mg#
@@ -413,6 +372,8 @@ gls_avg <- rock_data_wt %>% #first create new table containing avg's
             "Total" = mean(Total))
 
 ## plot averages of all glass per rock
+
+## Alk average on TAS
 tas +
   geom_point(data = gls_avg, aes(x = SiO2, y = Na2O + K2O, shape = RockName, color = RockName)) +
   labs(title = "Rocks Plotted on TAS Diagram", x = "SiO2, Wt%", y = "Na2O + K2O, Wt%") +
@@ -424,11 +385,11 @@ tas +
         legend.title = element_text(size = 14),
         plot.title = element_text(hjust = 0.5))
 
-
+## Mg Avgerage Plot
 mg_avg_plot <- gls_avg %>%
   ggplot(mapping = aes(SiO2, MgN, colour = RockName)) +
   geom_point(aes(shape = RockName, color = RockName), size = 3) +
-  labs(title = "Silica vs Magnesium Number Mean by rock", x = "SiO2, Wt%", y = "Mg #") +
+  labs(title = "Average Silica vs Magnesium Number by rock", x = "SiO2, Wt%", y = "Mg #") +
   scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) +  
   scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
                                 "blue2", "deeppink2", "orchid3", 
@@ -441,6 +402,78 @@ mg_avg_plot <- mg_avg_plot +
         legend.title = element_text(size = 14),
         plot.title = element_text(hjust = 0.5))
 mg_avg_plot + scale_x_continuous(limits = c(55,80))
+
+## Iron Average Plot
+fe_avg_plot <- gls_avg %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(SiO2, FeO, colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  labs(title = "Average Silica vs Iron by Rock", x = "SiO2, Wt%", y = "FeO*, Wt%") +
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3",
+                                "royalblue4", "firebrick3", "cyan3"))
+fe_avg_plot <- fe_avg_plot + 
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+fe_avg_plot + scale_x_continuous(limits = c(50, 80))
+
+## Calcium Average Plot
+ca_avg_plot <- gls_avg %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(SiO2, CaO, colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  labs(title = "Average Silica vs Calcium by Rock", x = "SiO2, Wt%", y = "CaO, Wt%") +
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3",
+                                "royalblue4", "firebrick3", "cyan3"))
+ca_avg_plot <- ca_avg_plot + 
+  guides(color = guide_legend(override.aes = list(size = 5))) + 
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+ca_avg_plot + scale_x_continuous(limits = c(50, 80))
+
+##Aluminum Average plot
+al_avg_plot <- gls_avg %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(SiO2, Al2O3, colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  labs(title = "Average Silica vs Aluminum by Rock", x = "SiO2, Wt%", y = "Al2O3, Wt%") +
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3",
+                                "royalblue4", "firebrick3", "cyan3"))
+al_avg_plot <- al_avg_plot + 
+  guides(color = guide_legend(override.aes = list(size = 5))) + 
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+al_avg_plot + scale_x_continuous(limits = c(50, 80))
+
+## Al vs Ti average plot
+alti_avg_plot <- gls_avg %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(Al2O3, TiO2, colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  labs(title = "Average Aluminum vs Titanium by Rock", x = "Al2O3, Wt%", y = "TiO2, Wt%") +
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3",
+                                "royalblue4", "firebrick3", "cyan3"))
+alti_avg_plot <- alti_avg_plot + 
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+alti_avg_plot
 
 #attempt at table showing mean and sd of al vs ti using huxtable
 al_ti_tb <- rock_data_wt %>%

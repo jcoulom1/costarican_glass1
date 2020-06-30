@@ -433,6 +433,104 @@ tas +
 
 \newpage
 
+```{r mg avg, echo=FALSE, fig.dim = c(10,7)}
+mg_avg_plot <- gls_avg %>%
+  ggplot(mapping = aes(SiO2, MgN, colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName), size = 3) +
+  labs(title = "Average Silica vs Magnesium Number by rock", x = "SiO2, Wt%", y = "Mg #") +
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) +  
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3", 
+                                "royalblue4", "firebrick3", "cyan3"))
+
+mg_avg_plot <- mg_avg_plot + 
+  guides(color = guide_legend(override.aes = list(size = 5))) + 
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+mg_avg_plot + scale_x_continuous(limits = c(55,80))
+```
+
+```{r fe avg, echo=FALSE, fig.dim = c(10,7)}
+fe_avg_plot <- gls_avg %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(SiO2, FeO, colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  labs(title = "Average Silica vs Iron by Rock", x = "SiO2, Wt%", y = "FeO*, Wt%") +
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3",
+                                "royalblue4", "firebrick3", "cyan3"))
+fe_avg_plot <- fe_avg_plot + 
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+fe_avg_plot + scale_x_continuous(limits = c(50, 80))
+```
+
+```{r ca avg, echo=FALSE, fig.dim = c(10,7)}
+ca_avg_plot <- gls_avg %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(SiO2, CaO, colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  labs(title = "Average Silica vs Calcium by Rock", x = "SiO2, Wt%", y = "CaO, Wt%") +
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3",
+                                "royalblue4", "firebrick3", "cyan3"))
+ca_avg_plot <- ca_avg_plot + 
+  guides(color = guide_legend(override.aes = list(size = 5))) + 
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+ca_avg_plot + scale_x_continuous(limits = c(50, 80))
+```
+
+```{r al avg, echo=FALSE, fig.dim = c(10,7)}
+al_avg_plot <- gls_avg %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(SiO2, Al2O3, colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  labs(title = "Average Silica vs Aluminum by Rock", x = "SiO2, Wt%", y = "Al2O3, Wt%") +
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3",
+                                "royalblue4", "firebrick3", "cyan3"))
+al_avg_plot <- al_avg_plot + 
+  guides(color = guide_legend(override.aes = list(size = 5))) + 
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+al_avg_plot + scale_x_continuous(limits = c(50, 80))
+```
+
+```{r alti avg, echo=FALSE, fig.dim = c(10,7)}
+alti_avg_plot <- gls_avg %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(Al2O3, TiO2, colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  labs(title = "Average Aluminum vs Titanium by Rock", x = "Al2O3, Wt%", y = "TiO2, Wt%") +
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3",
+                                "royalblue4", "firebrick3", "cyan3"))
+alti_avg_plot <- alti_avg_plot + 
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+alti_avg_plot
+```
+
+\newpage
+
+
 Table laying out representative glass samples
 
 ```{r glass table, echo=FALSE}
