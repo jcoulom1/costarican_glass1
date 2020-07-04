@@ -24,7 +24,7 @@ table_nums(Name = "mean", caption = "Mean averages for major elements")
 #Create new columns for RockName
 bulk_data$Comment <- as.character(bulk_data$Comment)
 blk_cr1a <- bulk_data %>%
-  filter(grepl("CR1A", bulk_data$Comment)) %>% #filter for rock
+  filter(grepl("CRA1A", bulk_data$Comment)) %>% #filter for rock
   mutate("RockName" = "CR1A")  #add column for rockname
 blk_cr1b <- bulk_data %>%
   filter(grepl("CR1B", bulk_data$Comment)) %>%
@@ -45,10 +45,10 @@ blk_cr4 <- bulk_data %>%
   filter(grepl("CR4", bulk_data$Comment)) %>%
   mutate("RockName" = "CR4")
 blk_cr5 <- bulk_data %>%
-  filter(grepl("CR5", bulk_data$Comment)) %>%
+  filter(grepl("COR5", bulk_data$Comment)) %>%
   mutate("RockName" = "CR5")
 blk_cr6 <- bulk_data %>%
-  filter(grepl("CR6", bulk_data$Comment)) %>%
+  filter(grepl("COR6", bulk_data$Comment)) %>%
   mutate("RockName" = "CR6")
 blk_cr7 <- bulk_data %>%
   filter(grepl("CR7", bulk_data$Comment)) %>%
