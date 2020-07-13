@@ -65,8 +65,17 @@ blk_data_wt$SiO2 >= poly
 
 blk_data_wt$SiO2 >= poly
 
+##find way to create function for plot themese
+ggcust <- function(...){
+    guides(color = guide_legend(override.aes = list(size = 5))) + 
+    theme(text = element_text(size = 15),
+          legend.key.size = unit(1.0, "cm"),
+          legend.title = element_text(size = 14),
+          plot.title = element_text(hjust = 0.5))
+}
+
 ## find way to plot averages on all rather than all points
-gls_avg <- rock_data_wt %>% #first create new table containing avg's
+blk_avg <- blk_data_wt %>% #first create new table containing avg's
   group_by(RockName) %>%
   summarise("SiO2" = mean(SiO2), "TiO2" = mean(TiO2),
             "Al2O3" = mean(Al2O3), "Cr" = mean(Cr2O3),
@@ -74,8 +83,10 @@ gls_avg <- rock_data_wt %>% #first create new table containing avg's
             "FeO" = mean(FeO), "Na2O" = mean(Na2O), "K2O" = mean(K2O),
             "S" = mean(S), "P2O5" = mean(P2O5), "MgN" = mean(MgN),
             "Total" = mean(Total))
+
+
 #now try against plot
-mg_avg_plot <- gls_avg %>%
+mg_avg_plot <- blk_avg %>%
   ggplot(mapping = aes(SiO2, MgN, colour = RockName)) +
   geom_point(aes(shape = RockName, color = RockName), size = 3) +
   labs(title = "Silica vs Magnesium Number Mean by rock", x = "SiO2, Wt%", y = "Mg #") +
@@ -85,12 +96,8 @@ mg_avg_plot <- gls_avg %>%
                                 "royalblue4", "firebrick3", "cyan3"))
 
 mg_avg_plot <- mg_avg_plot + 
-  guides(color = guide_legend(override.aes = list(size = 5))) + 
-  theme(text = element_text(size = 15),
-        legend.key.size = unit(1.0, "cm"),
-        legend.title = element_text(size = 14),
-        plot.title = element_text(hjust = 0.5))
-mg_avg_plot + scale_x_continuous(limits = c(55,80)) #sets x axis boundaries
+ ggcust()
+mg_avg_plot + scale_x_continuous(limits = c(40,60)) #sets x axis boundaries
 
 
 

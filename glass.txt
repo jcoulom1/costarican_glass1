@@ -54,3 +54,6 @@ and determined that CRA1A is more homogenous (Mo bead reached better T's) so
 that data will be used.  Upload that into master data and converted COR and CR1A1
 into .rmd file.
 
+attempt 1 to create a function that dictates the theme components of all graphs for streamlining
+the plots (will reduce lines of code for all subsequent plots)
+

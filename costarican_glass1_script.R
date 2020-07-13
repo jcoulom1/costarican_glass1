@@ -373,6 +373,22 @@ gls_avg <- rock_data_wt %>% #first create new table containing avg's
 
 ## plot averages of all glass per rock
 
+#plot alkali by rockname - all points
+alk_avg_plot <-  gls_avg %>%
+  ggplot(mapping = aes(x = SiO2, y = Na2O + K2O, colour = RockName, legend(cex = 0.75))) +
+  geom_point(aes(shape = RockName, color = RockName, size = 2)) +
+  labs(title = "Alkali Average by Rock Name", x = "SiO2, Wt%", y = "Na2O + K2O, Wt%") +
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3",
+                                "royalblue4", "firebrick3", "cyan3")) +
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+alk_avg_plot
+
 ## Alk average on TAS
 tas +
   geom_point(data = gls_avg, aes(x = SiO2, y = Na2O + K2O, shape = RockName, color = RockName)) +
