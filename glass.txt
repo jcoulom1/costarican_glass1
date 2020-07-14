@@ -57,3 +57,6 @@ into .rmd file.
 attempt 1 to create a function that dictates the theme components of all graphs for streamlining
 the plots (will reduce lines of code for all subsequent plots)
 
+created code to simplify all plots.  plot_symbol is all shapes and colors and plot_theme details
+all the consistent theme infor for all plots.  Intend to write this at beginning of rmd and
+simplify all plots from there
