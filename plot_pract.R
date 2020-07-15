@@ -66,13 +66,33 @@ blk_data_wt$SiO2 >= poly
 blk_data_wt$SiO2 >= poly
 
 ##find way to create function for plot themese
-ggcust <- function(...){
+plot_theme <- function(...){
     guides(color = guide_legend(override.aes = list(size = 5))) + 
     theme(text = element_text(size = 15),
           legend.key.size = unit(1.0, "cm"),
           legend.title = element_text(size = 14),
           plot.title = element_text(hjust = 0.5))
 }
+
+##attempt to use function in plot
+mg_plot_func <- blk_data_wt %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(SiO2, MgN, colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  labs(title = "Silica vs Magnesium Number by rock", x = "SiO2, Wt%", y = "Mg #") +
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) +  
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4", "blue2", "deeppink2", "orchid3", "royalblue4", "firebrick3", "cyan3"))
+mg_blk_plot <- mg_blk_plot + 
+  guides(color = guide_legend(override.aes = list(size = 5))) + 
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+mg_blk_plot + scale_x_continuous(limits = c(45, 65))
+plot_theme(mg_plot_func)
+
+
+
 
 ## find way to plot averages on all rather than all points
 blk_avg <- blk_data_wt %>% #first create new table containing avg's
@@ -93,13 +113,12 @@ mg_avg_plot <- blk_avg %>%
   scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) +  
   scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
                                 "blue2", "deeppink2", "orchid3", 
-                                "royalblue4", "firebrick3", "cyan3"))
-
-mg_avg_plot <- mg_avg_plot + 
- ggcust()
-mg_avg_plot + scale_x_continuous(limits = c(40,60)) #sets x axis boundaries
-
-
+                                "royalblue4", "firebrick3", "cyan3")) +
+  guides(color = guide_legend(override.aes = list(size = 5))) + 
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
 
 
 

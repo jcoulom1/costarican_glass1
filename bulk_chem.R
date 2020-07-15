@@ -66,30 +66,29 @@ blk_data_wt <- blk_data %>%
 #leave off last line of this due to bulk not requiring as many constraints as glass
 
 ## create funtion for themes
-ggcust <- function(...){
-  guides(color = guide_legend(override.aes = list(size = 5))) + 
+plot_theme <- list(
+  guides(color = guide_legend(override.aes = list(size = 5))), 
     theme(text = element_text(size = 15),
           legend.key.size = unit(1.0, "cm"),
           legend.title = element_text(size = 14),
           plot.title = element_text(hjust = 0.5))
-}
+)
 
+## create function for shape and color
+plot_symbols <- list(
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)),
+    scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                  "blue2", "deeppink2", "orchid3",
+                                  "royalblue4", "firebrick3", "cyan3"))
+)
 
 ## try to use function on plot 
-alk_blk_plot <- ggcust(blk_data_wt, aes(x = SiO2, y = Na2O + K2O)) +
+alk_plot_func <- ggplot(blk_data_wt, aes(x = SiO2, y = Na2O + K2O)) +
   facet_wrap(vars(RockName)) +  #create facet wrap by rockname
   geom_point(aes(shape = RockName, color = RockName)) +  #indicate using shape and color to visualize
-  labs(title = "Silica Vs Alkali (Na2O + K2O)", x = "SiO2, Wt%", y = "Na2O + K20, Wt%") +   #add plot title % axis labels
-  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) +  #provide values for shape
-  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
-                                "blue2", "deeppink2", "orchid3",
-                                "royalblue4", "firebrick3", "cyan3")) + #prov values for color
-  guides(color = guide_legend(override.aes = list(size = 5))) + #this makes the legend key marks bigger
-  theme(text = element_text(size = 15), #this makes all the text bigger
-        legend.key.size = unit(1.0, "cm"), #this makes legend smaller
-        legend.title = element_text(size = 14),  #this makes leg text smaller
-        plot.title = element_text(hjust = 0.5)) #moves title to center of plot
-alk_blk_plot
+  labs(title = "Silica Vs Alkali (Na2O + K2O)", x = "SiO2, Wt%", y = "Na2O + K20, Wt%") +  #add plot title % axis labels
+  plot_symbols +
+  plot_theme
 
 
 

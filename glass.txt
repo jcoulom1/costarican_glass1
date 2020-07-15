@@ -60,3 +60,6 @@ the plots (will reduce lines of code for all subsequent plots)
 created code to simplify all plots.  plot_symbol is all shapes and colors and plot_theme details
 all the consistent theme infor for all plots.  Intend to write this at beginning of rmd and
 simplify all plots from there
+
+applied new shortened commands to all plots on bulk rmd.  Also installed updates on all pkgs
+
