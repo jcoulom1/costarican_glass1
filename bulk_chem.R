@@ -4,7 +4,7 @@
 
 
 #Load packages and data
-library(dbplyr)
+library(dplyr)
 library(tidyverse)
 library(gridExtra)
 library(data.table)
@@ -18,7 +18,7 @@ figure_nums <- captioner(prefix = "Figure")
 
 figure_nums(name = "tas", caption = "TAS Diagram for bulk rock compositions")
 figure_nums(name = "plots", caption = "Major elements plotted against SiO2.  All Wt% except Mg#")
-table_nums(Name = "mean", caption = "Mean averages for major elements")
+table_nums(name = "mean", caption = "Mean averages for major elements")
 
 
 #Create new columns for RockName
@@ -812,7 +812,7 @@ bulk_avg <- blk_data_wt %>%
             "M MgO" = mean(MgO), "CaO" = mean(CaO), "MnO" = mean(MnO),
             "M FeO" = mean(FeO), "Na2O" = mean(Na2O), "K2O" = mean(K2O),
             "M S" = mean(S), "P2O5" = mean(P2O5), "MgN" = mean(MgN),
-            "M Total" = mean(Total))
+            "M Total" = mean(Total), .groups = "keep")
 bulk_avg <- as.data.frame(bulk_avg)  ##convert above to df
 bulk_avga <- bulk_avg[,-1] ##remove first column from df
 rownames(bulk_avga) <- bulk_avg[, 1] ## add column back in as rownames

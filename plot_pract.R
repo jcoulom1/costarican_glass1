@@ -187,7 +187,7 @@ mean <- blk_data_wt %>%
   summarise(n = n(),
             "M SiO2" = mean(SiO2), "SD SiO2" = sd(SiO2),
             "M TiO2" = mean(TiO2), "SD TiO2" = sd(TiO2),
-            "M Al2O3" = mean(Al2O3), "SD Al2O3" = sd(Al2O3))
+            "M Al2O3" = mean(Al2O3), "SD Al2O3" = sd(Al2O3), .groups = "keep")
 print(mean)
 
   

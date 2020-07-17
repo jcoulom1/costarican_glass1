@@ -63,3 +63,4 @@ simplify all plots from there
 
 applied new shortened commands to all plots on bulk rmd.  Also installed updates on all pkgs
 
+upgraded R from 3.6 to 4.0 and all associated packages
