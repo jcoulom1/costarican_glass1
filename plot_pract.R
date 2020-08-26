@@ -74,6 +74,13 @@ plot_theme <- function(...){
           plot.title = element_text(hjust = 0.5))
 }
 
+plot_symbols <- list(
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)),
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3",
+                                "royalblue4", "firebrick3", "cyan3"))
+)
+
 ##attempt to use function in plot
 mg_plot_func <- blk_data_wt %>%
   group_by(RockName) %>%
@@ -92,6 +99,13 @@ mg_blk_plot + scale_x_continuous(limits = c(45, 65))
 plot_theme(mg_plot_func)
 
 
+## what does plot of MgO against K20 and CaO look like??
+mg_k20_plot <- blk_data_wt %>%
+  ggplot(mapping = aes(MgO, K2O, color = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  labs(x = "MgO Wt%", y = "K2O Wt%") +
+  plot_symbols
+mg_k20_plot
 
 
 ## find way to plot averages on all rather than all points

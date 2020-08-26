@@ -1,7 +1,7 @@
 ---
 title: "Costa Rican Glass Compositions"
 author: "Julie M. Coulombe"
-date: "2/25/2020"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
 output:
   word_document: default
   reference_docx: mystyles.docx

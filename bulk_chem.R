@@ -11,8 +11,9 @@ library(data.table)
 library(captioner)
 library(furniture)
 library(ggpubr)
+library(flextable)
 
-bulk_data <- read.csv("C:/Users/labry/Documents/R/costarican_glass1/data/bulk_comp_data_a.csv")
+bulk_data <- read.csv("C:/Users/labry/Documents/R/costarican_glass1/data/wt%_probe_data.csv")
 table_nums <- captioner(prefix = "Table")
 figure_nums <- captioner(prefix = "Figure")
 
@@ -90,6 +91,24 @@ alk_plot_func <- ggplot(blk_data_wt, aes(x = SiO2, y = Na2O + K2O)) +
   plot_symbols +
   plot_theme
 
+
+## what does MgO vs K2O look like?
+mg_k20_plot <- blk_data_wt %>%
+  ggplot(mapping = aes(MgO, K2O)) +
+  facet_wrap(vars(RockName)) +
+  geom_point(aes(shape = RockName, color = RockName)) +
+  labs(x = "MgO Wt%", y = "K2O Wt%") +
+  plot_symbols
+mg_k20_plot
+
+
+mg_CaO_plot <- blk_data_wt %>%
+  ggplot(mapping = aes(MgO, CaO)) +
+  facet_wrap(vars(RockName)) +
+  geom_point(aes(shape = RockName, color = RockName)) +
+  labs(x = "MgO Wt%", y = "CaO Wt%") +
+  plot_symbols
+mg_CaO_plot
 
 
 ##Create plot for SiO2 vs Na2O + K2O by each bulk rock
@@ -461,15 +480,27 @@ ggarrange(mg_blk_plotp, fe_blk_plotp, ca_blk_plotp, k_blk_plotp, ti_blk_plotp, a
           ncol = 2, nrow = 3, common.legend = TRUE, legend = "bottom")  ##this looks better
 #but requires first plot to include info and balance to not (see rmd for plots)
 
+
+#can I make a function for mean
+x <- blk_data_wt$SiO2
+
+mean_func <- function(x){
+  mean_d <- c(mean(x), sd(x))
+}
+
+mean_func()
+
 ## create table of bulk averages by rock
 blk_avg <- blk_data_wt %>%
   group_by(RockName) %>%
-  summarise("SiO2" = mean(SiO2), "TiO2" = mean(TiO2),
-            "Al2O3" = mean(Al2O3), "Cr" = mean(Cr2O3),
-            "MgO" = mean(MgO), "CaO" = mean(CaO), "MnO" = mean(MnO),
-            "FeO" = mean(FeO), "Na2O" = mean(Na2O), "K2O" = mean(K2O),
+  summarise("SiO2" = c(mean(SiO2), sd(SiO2)), "TiO2" = c(mean(TiO2), sd(TiO2)),
+            "Al2O3" = c(mean(Al2O3), sd(Al2O3)), "Cr" = c(mean(Cr2O3), sd(Cr2O3)),
+            "MgO" = c(mean(MgO), sd(MgO)), "CaO" = c(mean(CaO), sd(CaO)), 
+            "MnO" = c(mean(MnO), sd(MnO)),"FeO" = c(mean(FeO), sd(FeO)),
+            "Na2O" = c(mean(Na2O), "K2O" = mean(K2O),
             "S" = mean(S), "P2O5" = mean(P2O5), "MgN" = mean(MgN),
-            "Total" = mean(Total))
+            "Total" = mean(Total), .groups = "keep")
+
 
 alk_avg_blkplot <- blk_avg %>%
   ggplot(mapping = aes(x = SiO2, y = Na2O + K2O, colour = RockName, legend(cex = 0.75))) +
@@ -844,13 +875,13 @@ bulk_avg <- blk_data_wt %>%
             "M S" = mean(S),  "SD S" = sd(S),
             "M P2O5" = mean(P2O5), "SD P2O5" = sd(P2O5),
             "M MgN" = mean(MgN),  "SD MgN" = sd(MgN),
-            "M Total" = mean(Total), "SD Total" = sd(Total))
-bulk_avg <- as.data.frame(bulk_avg)  ##convert above to df
-bulk_avga <- bulk_avg[,-1] ##remove first column from df
-rownames(bulk_avga) <- bulk_avg[, 1] ## add column back in as rownames
-bulk_avg_tran <- transpose(bulk_avga) ##transpose df
-rownames(bulk_avg_tran) <- colnames(bulk_avga) ##trans the col names
-colnames(bulk_avg_tran) <- rownames(bulk_avga) ##trans the row names
+            "M Total" = mean(Total), "SD Total" = sd(Total), .groups = "keep")
+bulk_avg2 <- as.data.frame(bulk_avg)  ##convert above to df
+bulk_avg3 <- bulk_avg2[,-1] ##remove first column from df
+rownames(bulk_avg3) <- bulk_avg2[, 1] ## add column back in as rownames
+bulk_avg_tran <- transpose(bulk_avg3) ##transpose df
+rownames(bulk_avg_tran) <- colnames(bulk_avg3) ##trans the col names
+colnames(bulk_avg_tran) <- rownames(bulk_avg3) ##trans the row names
 rownames_to_column(bulk_avg_tran, var = "Element")  #give name to row
 
 ## attempt to create table with furniture package

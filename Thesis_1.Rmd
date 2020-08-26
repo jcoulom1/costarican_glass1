@@ -1,6 +1,7 @@
 ---
-title: "Evolution of Costa Rican Volcanic Glass"
+title: "Evaluation of Costa Rican Volcanic Rocks from Barva Volcano"
 author: "Julie M. Coulombe"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
 output:
   word_document:
     reference_docx: thesis_template.docx
@@ -12,6 +13,6 @@ Methods
 =========================================
 
 
-Nine samples were retrieved from the Tajo la Florida, a quarry on Barva volcano in central Costa Rica.  The samples were obtained from seven different units, with units one and two sampled from both top and bottom of the flow.  Three thin sections were created from each unit and these were used for petrogrphic, scanning electron microscope (SEM) and electron microprobe analysis (EMPA) analysis.  Major element compositions were obtained via EMPA on a Cameca SX100.  Samples were analyized at a 1 µm spot size and a 10 nA beam current for glass analysis and also 10 nA beam current for bulk analysis but a 15 µm spot size was used.  All analyses were run at 15 kV accelerating charge and a counting time of 20 seconds.
+Nine samples were retrieved from the Tajo la Florida, a quarry on Barva volcano in central Costa Rica.  The samples were obtained from seven different units, with units one and two sampled from both top and bottom of the flow.  Three thin sections were created from each unit and these were used for petrogrphic, scanning electron microscope (SEM) and, for glass compositions, electron microprobe analysis (EMPA) analysis.  Major element compositions were obtained via EMPA on a Cameca SX100.  Bulk compositions were also obtained via EMPA analyisis, but from powder from pulverized samples being formed into homogenous glass beads via Mo-foil packets. Samples were analyized at a 1 µm spot size and a 10 nA beam current for glass analysis and also 10 nA beam current for bulk analysis but a 15 µm spot size was used.  All analyses were run at 15 kV accelerating charge and a counting time of 20 seconds.
 
 <!--- Making a note here for comments --->
