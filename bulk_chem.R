@@ -834,6 +834,7 @@ cr1_cr2_blkalti
 
 
 
+
 ##Create table for mean for each rock
 #I like this better - cleaner but sd not included
 bulk_avg <- blk_data_wt %>%
@@ -843,7 +844,7 @@ bulk_avg <- blk_data_wt %>%
             "M MgO" = mean(MgO), "CaO" = mean(CaO), "MnO" = mean(MnO),
             "M FeO" = mean(FeO), "Na2O" = mean(Na2O), "K2O" = mean(K2O),
             "M S" = mean(S), "P2O5" = mean(P2O5), "MgN" = mean(MgN),
-            "M Total" = mean(Total), .groups = "keep")
+            "M Total" = mean(Total), .groups = ("keep"))
 bulk_avg <- as.data.frame(bulk_avg)  ##convert above to df
 bulk_avga <- bulk_avg[,-1] ##remove first column from df
 rownames(bulk_avga) <- bulk_avg[, 1] ## add column back in as rownames

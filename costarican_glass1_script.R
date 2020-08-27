@@ -588,6 +588,78 @@ al_ti_tb <- rock_data_wt %>%
 
 al_ti_tb$RockName <- as.character(al_ti_tb$RockName)
 
+## create function for se
+std <- function(x) sd(x)/sqrt(length(x))
+std(rock_data_wt$SiO2)  #shows this function works
+
+
+# df with se
+se_data <- rock_data_wt %>%
+  group_by(RockName) %>%
+  summarize("SiO2 se" = std(SiO2), "TiO2 se" = std(TiO2),
+            "Al2O3 se" = std(Al2O3), "Cr se" = std(Cr2O3),
+            "MgO se" = std(MgO), "CaO se" = std(CaO), "MnO se" = std(MnO),
+            "FeO se" = std(FeO), "Na2O se" = std(Na2O), "K2O se" = std(K2O),
+            "S se" = std(S), "P2O5 se" = std(P2O5), "MgN se" = std(MgN),
+            "Total se" = std(Total), .groups = "keep")
+
+## df with standard dev 
+sd_data <- rock_data_wt %>%
+  group_by(RockName) %>%
+  summarize("SiO2 sd" = sd(SiO2), "TiO2 sd" = sd(TiO2),
+            "Al2O3 sd" = sd(Al2O3), "Cr sd" = sd(Cr2O3),
+            "MgO sd" = sd(MgO), "CaO sd" = sd(CaO), "MnO sd" = sd(MnO),
+            "FeO sd" = sd(FeO), "Na2O sd" = sd(Na2O), "K2O sd" = sd(K2O),
+            "S sd" = sd(S), "P2O5 sd" = sd(P2O5), "MgN sd" = sd(MgN),
+            "Total sd" = sd(Total), .groups = "keep")
+
+
+#table for mean for glass samples
+glass_avg <- rock_data_wt %>%
+  group_by(RockName) %>% ##break into ind rocks
+  summarise(n = n(), "SiO2" = mean(SiO2), "TiO2" = mean(TiO2),
+            "Al2O3" = mean(Al2O3), "Cr" = mean(Cr2O3),
+            "MgO" = mean(MgO), "CaO" = mean(CaO), "MnO" = mean(MnO),
+            "FeO" = mean(FeO), "Na2O" = mean(Na2O), "K2O" = mean(K2O),
+            "S" = mean(S), "P2O5" = mean(P2O5), "MgN" = mean(MgN),
+            "Total" = mean(Total), .groups = ("keep"))
+glass_avg <- as.data.frame(glass_avg)  ##convert above to df
+glass_avga <- glass_avg[,-1] ##remove first column from df
+rownames(glass_avga) <- glass_avg[, 1] ## add column back in as rownames
+glass_avg_tran <- transpose(glass_avga) ##transpose df
+rownames(glass_avg_tran) <- colnames(glass_avga) ##trans the col names
+colnames(glass_avg_tran) <- rownames(glass_avga) ##trans the row names
+rownames_to_column(glass_avg_tran, var = "Element")
+
+## join df for mean with df for sd
+join_m_sd <- left_join(glass_avg, sd_data, by = "RockName") %>%
+  select(1,2,3,17,4,18,5,19,6,20,7,21,8,22,9,23,10,24,11,25,12,26,13,27,14,28,15,29,16,30)
+glass_msd <- as.data.frame(join_m_sd)
+
+
+## plot iron averages with error bars
+fe_glass_msd <- glass_msd %>%
+  ggplot(aes(x = SiO2, y = FeO, ymin = FeO - `FeO sd`, ymax = FeO + `FeO sd`, colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName), size = 4) +
+  geom_errorbar() +
+  labs(title = "Bulk Average Silica vs Iron by rock", x = "SiO2, Wt%", y = "FeO, wt%") +
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) +  
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3", 
+                                "royalblue4", "firebrick3", "cyan3"))
+
+fe_glass_msd <- fe_glass_msd + 
+  guides(color = guide_legend(override.aes = list(size = 5))) + 
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+fe_glass_msd
+
+
+
+  
+
 alti_hux <- hux(al_ti_tb) %>%
   add_colnames() %>%
   set_bold(row = 1, col = everywhere, value = TRUE) %>%

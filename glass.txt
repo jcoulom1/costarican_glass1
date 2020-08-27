@@ -69,3 +69,6 @@ updating adds and commits for all work done that's not been committed
 
 updated all packages successfully
 
+created df's with se and sd calculations.  Joined into table and then created ggplot with
+errorbars to indicate sd per Molly
+
