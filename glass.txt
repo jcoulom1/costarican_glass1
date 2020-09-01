@@ -75,3 +75,5 @@ errorbars to indicate sd per Molly
 multiple attmepts made to resolve glass avg table issue - error message continues to occur
 also some general tidying up of pages.
 
+on glass rmd entered symbol and theme setup and then tidyied all subsequent plots
+
