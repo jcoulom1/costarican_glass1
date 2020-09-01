@@ -14,7 +14,7 @@ An analysis of volcanic glass sampled from the Tajo La Florida quarry at Barva V
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, warn = 2)
 cr_data <- read.csv("data/wt%_probe_data.csv")
 library(dplyr)
 library(tidyverse)
@@ -546,12 +546,42 @@ cr_table1 <- cr_data2_trans2 %>%
  select("CR1A2_2 Pt1", "CR1B_1 Pt15", "CR2A2_3 PT1", "CR2B2_1 PT2", "CR31_3 PT7", "CR42_1 PT6", "CR51_2 PT5", "CR72_3 Pt1") %>%
   drop_na()
 cr_table1_tb <- rownames_to_column(cr_table1, var = "wt %") %>%
-  as.tibble()
+  as_tibble()
 cr_table1_tb
 ```
 
 \newpage
 
+Table showing glass averages
+
+```{r gls avg tbl, echo=FALSE}
+glass_avg <- rock_data_wt %>%
+  group_by(RockName) %>%
+    summarise(n = n(),
+            "SiO2 m" = mean(SiO2), "SiO2 sd" = sd(SiO2),
+            "TiO2 m" = mean(TiO2), "TiO2 sd" = sd(TiO2),
+            "Al2O3 m" = mean(Al2O3), "Al2O3 sd" = sd(Al2O3),
+            "Cr m" = mean(Cr2O3), "CR sd" = sd(Cr2O3),
+            "MgO m" = mean(MgO), "MgO sd" = sd(MgO), 
+            "CaO m" = mean(CaO), "CaO sd" = sd(CaO),
+            "MnO m" = mean(MnO), "MnO sd" = sd(MnO),
+            "FeO m" = mean(FeO), "FeO sd" = sd(FeO),
+            "Na2O m" = mean(Na2O), "Na2O sd" = sd(Na2O),
+            "K2O m" = mean(K2O), "K2O sd" = sd(K2O),
+            "S m" = mean(S), "S sd" = sd(S),
+            "P2O5 m" = mean(P2O5), "P2O5 sd" = sd(P2O5),
+            "MgN m" = mean(MgN), "MgN sd" = sd(MgN),
+            "Total m" = mean(Total), "Total sd" = sd(Total), .groups = "keep")
+glass_avg2 <- as.data.frame(glass_avg)
+glass_avg3 <- glass_avg2[,-1]
+rownames(glass_avg3) <- glass_avg2[, 1]
+glass_avg_tran <- transpose(glass_avg3)
+rownames(glass_avg_tran) <- colnames(glass_avg3)
+colnames(glass_avg_tran) <- rownames(glass_avg3)
+rownames_to_column(glass_avg_tran, var = "Element")
+```
+
+\newpage
 
 Taking a look at comparing CR1A to CR1B (two samples from the same flow)
 

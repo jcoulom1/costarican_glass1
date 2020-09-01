@@ -657,7 +657,32 @@ fe_glass_msd <- fe_glass_msd +
 fe_glass_msd
 
 
-
+glass_avg <- rock_data_wt %>%
+  group_by(RockName) %>%
+  summarise(n = n(),
+            "SiO2 m" = mean(SiO2), "SiO2 sd" = sd(SiO2),
+            "TiO2 m" = mean(TiO2), "TiO2 sd" = sd(TiO2),
+            "Al2O3 m" = mean(Al2O3), "Al2O3" = sd(Al2O3),
+            "Cr m" = mean(Cr2O3), "CR sd" = sd(Cr2O3),
+            "MgO m" = mean(MgO), "MgO sd" = sd(MgO), 
+            "CaO m" = mean(CaO), "CaO sd" = sd(CaO),
+            "MnO m" = mean(MnO), "MnO sd" = sd(MnO),
+            "FeO m" = mean(FeO), "FeO sd" = sd(FeO),
+            "Na2O m" = mean(Na2O), "Na2O sd" = sd(Na2O),
+            "K2O m" = mean(K2O), "K2O sd" = sd(K2O),
+            "S m" = mean(S), "S sd" = sd(S),
+            "P2O5 m" = mean(P2O5), "P2O5 sd" = sd(P2O5),
+            "MgN m" = mean(MgN), "MgN sd" = sd(MgN),
+            "Total m" = mean(Total), "Total sd" = sd(Total),
+            .groups = ("keep"))
+glass_avg <- as.data.frame(glass_avg)  ##convert above to df
+glass_avga <- glass_avg[,-1] ##remove first column from df
+rownames(glass_avga) <- glass_avg[, 1] ## add column back in as rownames
+glass_avg_tran <- transpose(glass_avga) ##transpose df
+rownames(glass_avg_tran) <- colnames(glass_avga) ##trans the col names
+colnames(glass_avg_tran) <- rownames(glass_avga) ##trans the row names
+rownames_to_column(glass_avg_tran, var = "Element")
+glass_avg_tran
   
 
 alti_hux <- hux(al_ti_tb) %>%
