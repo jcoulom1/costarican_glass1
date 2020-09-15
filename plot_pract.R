@@ -135,6 +135,7 @@ mg_avg_plot <- blk_avg %>%
         plot.title = element_text(hjust = 0.5))
 
 
+  
 
 ## compare orig smpl data (cr) to new samples (cor)  
 cr1A_cra1A_blkalk <- blk_data_wt %>%

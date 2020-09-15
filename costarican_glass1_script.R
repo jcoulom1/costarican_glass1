@@ -11,12 +11,30 @@ library(data.table)
 library(huxtable)
 library(kableExtra)
 
+plot_symbols <- list(
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)),
+  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                "blue2", "deeppink2", "orchid3",
+                                "royalblue4", "firebrick3", "cyan3"))
+)
 
+plot_theme <- list(
+  guides(color = guide_legend(override.aes = list(size = 5))), 
+  theme(text = element_text(size = 15),
+        legend.key.size = unit(1.0, "cm"),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(hjust = 0.5))
+)
+
+
+cr_data$Comment <- as.factor(cr_data$Comment)
 #create new column to sort by bulk rocks into a column for rockname
 
 rock_cr1a <- cr_data %>%
+   select(2:24) %>%
+   filter(Comment == `CR1A3_2 PT6`) %>%
    filter(grepl("CR1A", cr_data$Comment)) %>%  ##find all obs w/ CR1A
-  mutate("RockName" = "CR1A")  ##create new col with rock name (CR1A)
+    mutate("RockName" = "CR1A")  ##create new col with rock name (CR1A)
 rock_cr1b <- cr_data %>%
   filter(grepl("CR1B", cr_data$Comment)) %>%
   mutate("RockName" = "CR1B")
@@ -662,7 +680,7 @@ glass_avg <- rock_data_wt %>%
   summarise(n = n(),
             "SiO2 m" = mean(SiO2), "SiO2 sd" = sd(SiO2),
             "TiO2 m" = mean(TiO2), "TiO2 sd" = sd(TiO2),
-            "Al2O3 m" = mean(Al2O3), "Al2O3" = sd(Al2O3),
+            "Al2O3 m" = mean(Al2O3), "Al2O3 sd" = sd(Al2O3),
             "Cr m" = mean(Cr2O3), "CR sd" = sd(Cr2O3),
             "MgO m" = mean(MgO), "MgO sd" = sd(MgO), 
             "CaO m" = mean(CaO), "CaO sd" = sd(CaO),
@@ -683,7 +701,83 @@ rownames(glass_avg_tran) <- colnames(glass_avga) ##trans the col names
 colnames(glass_avg_tran) <- rownames(glass_avga) ##trans the row names
 rownames_to_column(glass_avg_tran, var = "Element")
 glass_avg_tran
+
+
+alk_avg_glsplot <- glass_avg %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(`SiO2 m`, y = `Na2O m` + `K2O m`,
+                       ymin = `Na2O m` + `K2O m` - `Na2O sd` + `K2O sd`,
+                       ymax = `Na2O m` + `K2O m` + `Na2O sd` + `K2O sd`,
+                       colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  geom_errorbar() +
+  labs(title = "Glass Average Silica vs Alk by Rock", x = "SiO2, Wt%", y = "Na2O + K2O, Wt%") +
+  plot_symbols +
+  plot_theme
+alk_avg_glsplot
+
+mg_avg_glsplot <- glass_avg %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(`SiO2 m`, `MgO m`, ymin = `MgO m` - `MgO sd`, ymax = `MgO m` + `MgO sd`, colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  geom_errorbar() +
+  labs(title = "Glass Average Silica vs Mg by Rock", x = "SiO2, Wt%", y = "MgO, Wt%") +
+  plot_symbols +
+  plot_theme
+mg_avg_glsplot
+
+fe_avg_glsplot <- glass_avg %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(`SiO2 m`, `FeO m`, ymin = `FeO m` - `FeO sd`, ymax = `FeO m` + `FeO sd`, colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  geom_errorbar() +
+  labs(title = "Glass Average Silica vs Iron by Rock", x = "SiO2, Wt%", y = "FeO, Wt%") +
+  plot_symbols +
+  plot_theme
+fe_avg_glsplot
+
+ca_avg_glsplot <- glass_avg %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(`SiO2 m`, `CaO m`, ymin = `CaO m` - `CaO sd`, ymax = `CaO m` + `CaO sd`, colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  geom_errorbar() +
+  labs(title = "Glass Average Silica vs Calcium by Rock", x = "SiO2, Wt%", y = "CaO, Wt%") +
+  plot_symbols +
+  plot_theme
+ca_avg_glsplot
+
+k_avg_glsplot <- glass_avg %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(`SiO2 m`, `K2O m`, ymin = `K2O m` - `K2O sd`,
+                       ymax = `K2O m` + `K2O sd`, colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  geom_errorbar() +
+  labs(title = "Glass Average Silica vs K by Rock", x = "SiO2, Wt%", y = "K2O, Wt%") +
+  plot_symbols +
+  plot_theme
+k_avg_glsplot
   
+ti_avg_glsplot <- glass_avg %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(`SiO2 m`, `TiO2 m`, ymin = `TiO2 m` - `TiO2 sd`,
+                       ymax = `TiO2 m` + `TiO2 sd`, colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  geom_errorbar() +
+  labs(title = "Glass Average Silica vs Ti by Rock", x = "SiO2, Wt%", y = "TiO2, Wt%") +
+  plot_symbols +
+  plot_theme
+ti_avg_glsplot
+
+al_avg_glsplot <- glass_avg %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(`SiO2 m`, `Al2O3 m`, ymin = `Al2O3 m` - `Al2O3 sd`,
+                       ymax = `Al2O3 m` + `Al2O3 sd`, colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  geom_errorbar() +
+  labs(title = "Glass Average Silica vs Al2O3 by Rock", x = "SiO2, Wt%", y = "Al2O3, Wt%") +
+  plot_symbols +
+  plot_theme
+al_avg_glsplot
 
 alti_hux <- hux(al_ti_tb) %>%
   add_colnames() %>%

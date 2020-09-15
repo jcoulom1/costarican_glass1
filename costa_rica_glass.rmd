@@ -176,7 +176,7 @@ p <- ggplot(data=d, mapping=aes(x=x, y=y)) +
   geom_blank() +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()) +
-  scale_y_continuous(limits=c(0,15), expand = c(0, 0)) + 
+  scale_y_continuous(limits=c(0,16), expand = c(0, 0)) + 
   scale_x_continuous(limits=c(40,80), expand = c(0, 0)) +
   labs(y=expression(Na[2]*O + K[2]*O*~ wt~'%'), x=expression(SiO[2]*~ wt~'%'))+
   annotate("segment", x=45, xend=45, y=1, yend=5)+
@@ -458,14 +458,103 @@ glass_avg <- rock_data_wt %>%
             "P2O5 m" = mean(P2O5), "P2O5 sd" = sd(P2O5),
             "MgN m" = mean(MgN), "MgN sd" = sd(MgN),
             "Total m" = mean(Total), "Total sd" = sd(Total), .groups = "keep")
-glass_avg2 <- as.data.frame(glass_avg)
-glass_avg3 <- glass_avg2[,-1]
-rownames(glass_avg3) <- glass_avg2[, 1]
-glass_avg_tran <- transpose(glass_avg3)
-rownames(glass_avg_tran) <- colnames(glass_avg3)
-colnames(glass_avg_tran) <- rownames(glass_avg3)
-rownames_to_column(glass_avg_tran, var = "Element")
+glass_avg <- as.data.frame(glass_avg)
+glass_avg
 ```
+
+\newpage
+
+```{r gls avg alk, echo=FALSE}
+alk_avg_glsplot <- glass_avg %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(`SiO2 m`, y = `Na2O m` + `K2O m`,
+                       ymin = `Na2O m` + `K2O m` - `Na2O sd` - `K2O sd`,
+                       ymax = `Na2O m` + `K2O m` + `Na2O sd` + `K2O sd`,
+                       colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  geom_errorbar() +
+  labs(title = "Glass Average Silica vs Alk by Rock", x = "SiO2, Wt%", y = "Na2O + K2O, Wt%") +
+  plot_symbols +
+  plot_theme
+alk_avg_glsplot
+```
+
+
+```{r gls avg mg, echo=FALSE}
+mg_avg_glsplot <- glass_avg %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(`SiO2 m`, `MgO m`, ymin = `MgO m` - `MgO sd`, ymax = `MgO m` + `MgO sd`, colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  geom_errorbar() +
+  labs(title = "Glass Average Silica vs Mg by Rock", x = "SiO2, Wt%", y = "MgO, Wt%") +
+  plot_symbols +
+  plot_theme
+mg_avg_glsplot
+```
+
+```{r gls avg fe, echo=FALSE}
+fe_avg_glsplot <- glass_avg %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(`SiO2 m`, `FeO m`, ymin = `FeO m` - `FeO sd`, ymax = `FeO m` + `FeO sd`, colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  geom_errorbar() +
+  labs(title = "Glass Average Silica vs Iron by Rock", x = "SiO2, Wt%", y = "FeO, Wt%") +
+  plot_symbols +
+  plot_theme
+fe_avg_glsplot
+```
+
+```{r gls avg ca, echo=FALSE}
+ca_avg_glsplot <- glass_avg %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(`SiO2 m`, `CaO m`, ymin = `CaO m` - `CaO sd`, ymax = `CaO m` + `CaO sd`, colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  geom_errorbar() +
+  labs(title = "Glass Average Silica vs Calcium by Rock", x = "SiO2, Wt%", y = "CaO, Wt%") +
+  plot_symbols +
+  plot_theme
+ca_avg_glsplot
+```
+
+```{r gls avg k, echo=FALSE}
+k_avg_glsplot <- glass_avg %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(`SiO2 m`, `K2O m`, ymin = `K2O m` - `K2O sd`,
+                       ymax = `K2O m` + `K2O sd`, colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  geom_errorbar() +
+  labs(title = "Glass Average Silica vs K by Rock", x = "SiO2, Wt%", y = "K2O, Wt%") +
+  plot_symbols +
+  plot_theme
+k_avg_glsplot
+```
+
+```{r gls avg ti, echo=FALSE}
+ti_avg_glsplot <- glass_avg %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(`SiO2 m`, `TiO2 m`, ymin = `TiO2 m` - `TiO2 sd`,
+                       ymax = `TiO2 m` + `TiO2 sd`, colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  geom_errorbar() +
+  labs(title = "Glass Average Silica vs Ti by Rock", x = "SiO2, Wt%", y = "TiO2, Wt%") +
+  plot_symbols +
+  plot_theme
+ti_avg_glsplot
+```
+
+```{r gls avg al, echo=FALSE}
+al_avg_glsplot <- glass_avg %>%
+  group_by(RockName) %>%
+  ggplot(mapping = aes(`SiO2 m`, `Al2O3 m`, ymin = `Al2O3 m` - `Al2O3 sd`,
+                       ymax = `Al2O3 m` + `Al2O3 sd`, colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  geom_errorbar() +
+  labs(title = "Glass Average Silica vs Al2O3 by Rock", x = "SiO2, Wt%", y = "Al2O3, Wt%") +
+  plot_symbols +
+  plot_theme
+al_avg_glsplot
+```
+
 
 \newpage
 

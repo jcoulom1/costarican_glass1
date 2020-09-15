@@ -83,7 +83,11 @@ blk_data_wt <- blk_data %>%
   filter(Total > 98.0 & Total < 101.0) #select rows based on Total constraints
 #leave off last line of this due to bulk not requiring as many constraints as glass
 
-
+## average Mo by rock
+bulk_mo <- blk_data_wt %>%
+  group_by(RockName) %>%
+  summarise("Mo m" = mean(Mo), "Mo sd" = sd(Mo), .groups = "keep")
+bulk_mo
 
 ## what does MgO vs K2O look like?
 mg_k20_plot <- blk_data_wt %>%
@@ -855,9 +859,13 @@ rownames(bulk_avg3) <- bulk_avg2[, 1] ## add column back in as rownames
 bulk_avg_tran <- transpose(bulk_avg3) ##transpose df but loses row and col names
 rownames(bulk_avg_tran) <- colnames(bulk_avg3) ##puts the rownames back
 colnames(bulk_avg_tran) <- rownames(bulk_avg3) ##puts the column names back
-rownames_to_column(bulk_avg_tran, var = "Element") %>%
-  as_tibble()
+rownames_to_column(bulk_avg_tran, var = "Element")
 
+##Use Flextable to hightlight every row
+myft <- flextable(
+  head(bulk_avg_tran),
+)
+myft
 
 ## attempt to create table with furniture package
 #this method worked but c/n print well in Rmd so disregarding

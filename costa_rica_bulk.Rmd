@@ -471,44 +471,48 @@ ggarrange(mg_blk_plotp, fe_blk_plotp, ca_blk_plotp, k_blk_plotp, ti_blk_plotp, a
 ```{r bulk avg table, include=FALSE, fig.dim = c(10,7)}                              
 blk_avg <- blk_data_wt %>%
   group_by(RockName) %>%
-  summarise("SiO2" = mean(SiO2), "TiO2" = mean(TiO2),
-            "Al2O3" = mean(Al2O3), "Cr" = mean(Cr2O3),
-            "MgO" = mean(MgO), "CaO" = mean(CaO), "MnO" = mean(MnO),
-            "FeO" = mean(FeO), "Na2O" = mean(Na2O), "K2O" = mean(K2O),
-            "S" = mean(S), "P2O5" = mean(P2O5), "MgN" = mean(MgN),
-            "Total" = mean(Total), .groups = "keep")
+  summarise("SiO2 m" = mean(SiO2), "SiO2 sd" = sd(SiO2),
+            "TiO2 m" = mean(TiO2), "TiO2 sd" = sd(TiO2),
+            "Al2O3 m" = mean(Al2O3), "Al2O3 sd" = sd(Al2O3),
+            "Cr m" = mean(Cr2O3), "Cr sd" = sd(Cr2O3),
+            "MgO m" = mean(MgO), "MgO sd" = sd(MgO),
+            "CaO m" = mean(CaO), "CaO sd" = sd(CaO),
+            "MnO m" = mean(MnO), "MnO sd" = sd(MnO),
+            "FeO m" = mean(FeO), "FeO sd" = sd(FeO),
+            "Na2O m" = mean(Na2O), "Na2O sd" = sd(Na2O),
+            "K2O m" = mean(K2O), "K2O sd" = sd(K2O),
+            "S m" = mean(S), "S sd" = sd(S),
+            "P2O5 m" = mean(P2O5), "P2O5 sd" = sd(P2O5),
+            "MgN m" = mean(MgN), "MgN sd" = sd(MgN),
+            "Total m" = mean(Total), "Total sd" = sd(Total), .groups = "keep")
   
 ```
 
 
 ```{r bulk avg si/alk, echo=FALSE, fig.dim = c(10,7)} 
 alk_avg_blkplot <- blk_avg %>%
-  ggplot(mapping = aes(x = SiO2, y = Na2O + K2O, colour = RockName, legend(cex = 0.75))) +
+  ggplot(mapping = aes(x = `SiO2 m`, y = `Na2O m` + `K2O m`, ymin = `Na2O m` + `K2O m` - `Na2O sd` + `K2O sd`, ymax = `Na2O m` + `K2O m` + `Na2O sd` + `K2O sd`, colour = RockName, legend(cex = 0.75))) +
   geom_point(aes(shape = RockName, color = RockName, size = 2)) +
-  labs(title = "Average Glass Alkali per Rock", x = "SiO2, Wt%", y = "Na2O + K2O, Wt%") +
+  geom_errorbar() +
+  labs(title = "Average Alkali per Rock", x = "SiO2, Wt%", y = "Na2O + K2O, Wt%") +
   plot_symbols + 
   plot_theme
 alk_avg_blkplot
 ```
 
-```{r bulk avg tas, echo=FALSE, fig.dim = c(10,7)} 
-tas +
-  geom_point(data = blk_avg, aes(x = SiO2, y = Na2O + K2O, shape = RockName, color = RockName, size = 3)) +
-  labs(title = "Bulk Rocks Plotted on TAS Diagram", x = "SiO2, Wt%", y = "Na2O + K2O, Wt%") +
-  plot_symbols +
-  plot_theme
-```
+
 
 \newpage
 
 
 ```{r bulk avg mg, echo = FALSE, fig.show='hide'} 
 mg_avg_blkplot <- blk_avg %>%
-  ggplot(mapping = aes(SiO2, MgN, colour = RockName)) +
-  geom_point(aes(shape = RockName, color = RockName, size = 3))+
+  ggplot(mapping = aes(`SiO2 m`, `MgN m`, ymin = `MgN m` - `MgN sd`, ymax = `MgN m` + `MgN sd`, colour = RockName)) +
+  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  geom_errorbar() +
   labs(x = "SiO2, Wt%", y = "Mg #") +
   plot_symbols +
-  guides(color = guide_legend(override.aes = list(size = 10))) + 
+  guides(color = guide_legend(override.aes = list(size = 6))) + 
   theme(text = element_text(size = 18),
           legend.key.size = unit(1.5, "cm"),
           legend.title = element_text(size = 20),
@@ -519,8 +523,9 @@ mg_avg_blkplot + scale_x_continuous(limits = c(50,60))
 ```{r bulk avg fe, echo = FALSE, fig.show='hide'}
 fe_avg_blkplot <- blk_avg %>%
   group_by(RockName) %>%
-  ggplot(mapping = aes(SiO2, FeO, colour = RockName)) +
+  ggplot(mapping = aes(`SiO2 m`, `FeO m`, ymin = `FeO m` - `FeO sd`, ymax = `FeO m` + `FeO sd`, colour = RockName)) +
   geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  geom_errorbar() + 
   labs(x = "SiO2, Wt%", y = "FeO*, Wt%") +
   plot_symbols +
   theme(text = element_text(size = 18))
@@ -530,8 +535,9 @@ fe_avg_blkplot + scale_x_continuous(limits = c(50, 60))
 ```{r bulk avg ca, echo = FALSE, fig.show='hide'} 
 ca_avg_blkplot <- blk_avg %>%
   group_by(RockName) %>%
-  ggplot(mapping = aes(SiO2, CaO, colour = RockName)) +
+  ggplot(mapping = aes(`SiO2 m`, `CaO m`, ymin = `CaO m` - `CaO sd`, ymax = `CaO m` + `CaO sd`, colour = RockName)) +
   geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  geom_errorbar() +
   labs(x = "SiO2, Wt%", y = "CaO, Wt%") +
   plot_symbols +
   theme(text = element_text(size = 18))
@@ -541,8 +547,9 @@ ca_avg_blkplot + scale_x_continuous(limits = c(50, 60))
 ```{r bulk avg K2O, echo = FALSE, fig.show='hide'} 
 k_avg_blkplot <- blk_avg %>%
   group_by(RockName) %>%
-  ggplot(mapping = aes(SiO2, K2O, colour = RockName)) +
+  ggplot(mapping = aes(`SiO2 m`, `K2O m`, ymin = `K2O m` - `K2O sd`, ymax = `K2O m` + `K2O sd`, colour = RockName)) +
   geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  geom_errorbar() + 
   labs(x = "SiO2, Wt%", y = "K2O, Wt%") +
   plot_symbols +
   theme(text = element_text(size = 18))
@@ -553,8 +560,9 @@ k_avg_blkplot + scale_x_continuous(limits = c(50, 60))
 ```{r bulk avg ti, echo = FALSE, fig.show='hide'} 
 ti_avg_blkplot <- blk_avg %>%
   group_by(RockName) %>%
-  ggplot(mapping = aes(SiO2, TiO2, colour = RockName)) +
+  ggplot(mapping = aes(`SiO2 m`, `TiO2 m`, ymin = `TiO2 m` - `TiO2 sd`, ymax = `TiO2 m` + `TiO2 sd`, colour = RockName)) +
   geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  geom_errorbar() +
   labs(x = "SiO2, Wt%", y = "TiO2, Wt%") +
   plot_symbols +
   theme(text = element_text(size = 18))
@@ -565,8 +573,9 @@ ti_avg_blkplot + scale_x_continuous(limits = c(50, 60))
 ```{r bulk avg al, echo = FALSE, fig.show='hide'}
 al_avg_blkplot <- blk_avg %>%
   group_by(RockName) %>%
-  ggplot(mapping = aes(SiO2, Al2O3, colour = RockName)) +
+  ggplot(mapping = aes(`SiO2 m`, `Al2O3 m`, ymin = `Al2O3 m` - `Al2O3 sd`, ymax = `Al2O3 m` + `Al2O3 sd`, colour = RockName)) +
   geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  geom_errorbar() +
   labs(x = "SiO2, Wt%", y = "Al2O3, Wt%") +
   plot_symbols +
   theme(text = element_text(size = 18))
@@ -576,8 +585,9 @@ al_avg_blkplot + scale_x_continuous(limits = c(50, 60))
 ```{r bulk avg alti, echo = FALSE, fig.show='hide', fig.dim = c(10,7)}
 alti_avg_blkplot <- blk_avg %>%
   group_by(RockName) %>%
-  ggplot(mapping = aes(Al2O3, TiO2, colour = RockName)) +
+  ggplot(mapping = aes(`Al2O3 m`, `TiO2 m`, ymin = `TiO2 m` - `TiO2 sd`, ymax = `TiO2 m` + `TiO2 sd`, colour = RockName)) +
   geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  geom_errorbar() +
   labs(title = "Bulk Average Aluminum vs Titanium by Rock", x = "Al2O3, Wt%", y = "TiO2, Wt%") +
   plot_symbols +
   plot_theme
