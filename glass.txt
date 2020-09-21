@@ -80,3 +80,5 @@ on glass rmd entered symbol and theme setup and then tidyied all subsequent plot
 added mean and sd table to Rmd plus all major elements with error bars
 error bar plots also added to glass script
 
+updated r.script to condense code with plot_symbols and theme - streamlined
+

@@ -417,6 +417,7 @@ alti_avg_plot
 \newpage
 
 
+
 Table laying out representative glass samples
 
 ```{r glass table, echo=FALSE}
@@ -437,6 +438,7 @@ cr_table1_tb
 ```
 
 \newpage
+
 
 Table showing glass averages
 
@@ -462,9 +464,12 @@ glass_avg <- as.data.frame(glass_avg)
 glass_avg
 ```
 
+
+
+
 \newpage
 
-```{r gls avg alk, echo=FALSE}
+```{r gls avg alk, echo=FALSE, fig.dim = c(10,7)}
 alk_avg_glsplot <- glass_avg %>%
   group_by(RockName) %>%
   ggplot(mapping = aes(`SiO2 m`, y = `Na2O m` + `K2O m`,
@@ -480,7 +485,7 @@ alk_avg_glsplot
 ```
 
 
-```{r gls avg mg, echo=FALSE}
+```{r gls avg mg, echo=FALSE, fig.dim = c(10,7)}
 mg_avg_glsplot <- glass_avg %>%
   group_by(RockName) %>%
   ggplot(mapping = aes(`SiO2 m`, `MgO m`, ymin = `MgO m` - `MgO sd`, ymax = `MgO m` + `MgO sd`, colour = RockName)) +
@@ -492,7 +497,7 @@ mg_avg_glsplot <- glass_avg %>%
 mg_avg_glsplot
 ```
 
-```{r gls avg fe, echo=FALSE}
+```{r gls avg fe, echo=FALSE, fig.dim = c(10,7)}
 fe_avg_glsplot <- glass_avg %>%
   group_by(RockName) %>%
   ggplot(mapping = aes(`SiO2 m`, `FeO m`, ymin = `FeO m` - `FeO sd`, ymax = `FeO m` + `FeO sd`, colour = RockName)) +
@@ -504,7 +509,7 @@ fe_avg_glsplot <- glass_avg %>%
 fe_avg_glsplot
 ```
 
-```{r gls avg ca, echo=FALSE}
+```{r gls avg ca, echo=FALSE, fig.dim = c(10,7)}
 ca_avg_glsplot <- glass_avg %>%
   group_by(RockName) %>%
   ggplot(mapping = aes(`SiO2 m`, `CaO m`, ymin = `CaO m` - `CaO sd`, ymax = `CaO m` + `CaO sd`, colour = RockName)) +
@@ -516,7 +521,7 @@ ca_avg_glsplot <- glass_avg %>%
 ca_avg_glsplot
 ```
 
-```{r gls avg k, echo=FALSE}
+```{r gls avg k, echo=FALSE, fig.dim = c(10,7)}
 k_avg_glsplot <- glass_avg %>%
   group_by(RockName) %>%
   ggplot(mapping = aes(`SiO2 m`, `K2O m`, ymin = `K2O m` - `K2O sd`,
@@ -529,7 +534,7 @@ k_avg_glsplot <- glass_avg %>%
 k_avg_glsplot
 ```
 
-```{r gls avg ti, echo=FALSE}
+```{r gls avg ti, echo=FALSE, fig.dim = c(10,7)}
 ti_avg_glsplot <- glass_avg %>%
   group_by(RockName) %>%
   ggplot(mapping = aes(`SiO2 m`, `TiO2 m`, ymin = `TiO2 m` - `TiO2 sd`,
@@ -542,7 +547,7 @@ ti_avg_glsplot <- glass_avg %>%
 ti_avg_glsplot
 ```
 
-```{r gls avg al, echo=FALSE}
+```{r gls avg al, echo=FALSE, fig.dim = c(10,7)}
 al_avg_glsplot <- glass_avg %>%
   group_by(RockName) %>%
   ggplot(mapping = aes(`SiO2 m`, `Al2O3 m`, ymin = `Al2O3 m` - `Al2O3 sd`,
