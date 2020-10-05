@@ -14,9 +14,9 @@ output:
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, 
-                      warning = FALSE)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
 cr_data <- read.csv("data/bulk_comp_data.csv")
+bulk_data2 <- read.csv("data/bulk_fused_sept.csv")
 library(dbplyr)
 library(tidyverse)
 library(gridExtra)
@@ -64,46 +64,43 @@ bulk_data$Comment <- as.character(bulk_data$Comment)
 blk_cr1a <- bulk_data %>%
   filter(grepl("CRA1A", bulk_data$Comment)) %>% 
   mutate("RockName" = "CR1A") 
-blk_cr1b <- bulk_data %>%
-  filter(grepl("CR1B", bulk_data$Comment)) %>%
+blk_cr1b <- bulk_data2 %>%
+  filter(grepl("CR1B", bulk_data2$Comment)) %>%
   mutate("RockName" = "CR1B")
-blk_cr2a_t <- bulk_data %>%
-  filter(grepl("CR2A_T", bulk_data$Comment)) %>%
-  mutate("RockName" = "CR2A_T")
-blk_cr2a_m <- bulk_data %>%
-  filter(grepl("CR2A_M", bulk_data$Comment)) %>%
+blk_cr2a<- bulk_data2 %>%
+  filter(grepl("CR2A", bulk_data2$Comment)) %>%
   mutate("RockName" = "CR2A")
-blk_cr2b <- bulk_data %>%
-  filter(grepl("CR2B", bulk_data$Comment)) %>%
+blk_cr2b <- bulk_data2 %>%
+  filter(grepl("CR2B", bulk_data2$Comment)) %>%
   mutate("RockName" = "CR2B")
-blk_cr3 <- bulk_data %>%
-  filter(grepl("CR3", bulk_data$Comment)) %>%
+blk_cr3 <- bulk_data2 %>%
+  filter(grepl("CR3", bulk_data2$Comment)) %>%
   mutate("RockName" = "CR3")
-blk_cr4 <- bulk_data %>%
-  filter(grepl("CR4", bulk_data$Comment)) %>%
+blk_cr4 <- bulk_data2 %>%
+  filter(grepl("CR4", bulk_data2$Comment)) %>%
   mutate("RockName" = "CR4")
-blk_cr5 <- bulk_data %>%
-  filter(grepl("COR5", bulk_data$Comment)) %>%
+blk_cr5 <- bulk_data2 %>%
+  filter(grepl("CR5", bulk_data2$Comment)) %>%
   mutate("RockName" = "CR5")
-blk_cr6 <- bulk_data %>%
-  filter(grepl("COR6", bulk_data$Comment)) %>%
+blk_cr6 <- bulk_data2 %>%
+  filter(grepl("CR6", bulk_data2$Comment)) %>%
   mutate("RockName" = "CR6")
-blk_cr7 <- bulk_data %>%
-  filter(grepl("CR7", bulk_data$Comment)) %>%
+blk_cr7 <- bulk_data2 %>%
+  filter(grepl("CR7", bulk_data2$Comment)) %>%
   mutate("RockName" = "CR7")
 ```
 
 ```{r grp blk rocks together, include=FALSE}
-blk_data <- rbind(blk_cr1a, blk_cr1b, blk_cr2a_m, blk_cr2b, blk_cr3, blk_cr4, blk_cr5, blk_cr6, blk_cr7)
-blk_data <- blk_data[,c(29, 23, 2:15)]
-blk_data <- blk_data %>% 
+blk_data3 <- rbind(blk_cr1a, blk_cr1b, blk_cr2a, blk_cr2b, blk_cr3, blk_cr4, blk_cr5, blk_cr6, blk_cr7)
+blk_data3 <- blk_data3[,c(30, 24, 2:16)] 
+blk_data3 <- blk_data3 %>%  
   mutate("MgN" = ((MgO / (40.31)) / ((MgO / (40.31)) + (FeO / (71.85)))) * (100))
-blk_data$RockName <- as.factor(blk_data$RockName)
+blk_data3$RockName <- as.factor(blk_data3$RockName)
 ```
 
 
 ```{r blk data constraints, include = FALSE}
-blk_data_wt <- blk_data %>%
+blk_data_wt <- blk_data3 %>%
   select("RockName":"Total", "MgN") %>%  #choose relevant columns
   filter(Total > 98.0 & Total < 101.0) %>%
   filter(SiO2 > 40.0) #select rows based on Total
@@ -711,7 +708,7 @@ cr2a_cr2b_blkmg <- blk_data_wt %>%
 cr2a_cr2b_blkfe <- blk_data_wt %>%
   filter(grepl("CR2", blk_data_wt$RockName)) %>%
   ggplot(aes(SiO2, FeO, colour = RockName)) + 
-  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  geom_point(aes(shape = RockName, color = RockName)) +
   labs(x = "SiO2, Wt%", y = "FeO*, Wt%") + 
    scale_shape_manual(values = c(10, 11)) + 
   scale_color_manual(values = c("peachpuff4", "blue2")) + 
@@ -722,7 +719,7 @@ cr2a_cr2b_blkfe <- blk_data_wt %>%
 cr2a_cr2b_blkca <- blk_data_wt %>%
   filter(grepl("CR2", blk_data_wt$RockName)) %>%
   ggplot(aes(SiO2, CaO, colour = RockName)) + 
-  geom_point(aes(shape = RockName, color = RockName, size = 3)) +
+  geom_point(aes(shape = RockName, color = RockName)) +
   labs(x = "SiO2, Wt%", y = "CaO, Wt%") + 
    scale_shape_manual(values = c(10, 11)) + 
   scale_color_manual(values = c("peachpuff4", "blue2")) + 

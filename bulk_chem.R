@@ -14,6 +14,7 @@ library(ggpubr)
 library(flextable)
 
 bulk_data <- read.csv("C:/Users/labry/Documents/R/costarican_glass1/data/bulk_comp_data_a.csv")
+bulk_data2 <- read.csv("C:/Users/labry/Documents/R/costarican_glass1/data/bulk_fused_sept.csv")
 table_nums <- captioner(prefix = "Table")
 figure_nums <- captioner(prefix = "Figure")
 
@@ -41,44 +42,42 @@ plot_theme <- list(
 
 #Create new columns for RockName
 bulk_data$Comment <- as.character(bulk_data$Comment)
+bulk_data2$Comment <- as.character(bulk_data2$Comment)
 blk_cr1a <- bulk_data %>%
   filter(grepl("CRA1A", bulk_data$Comment)) %>% #filter for rock
   mutate("RockName" = "CR1A")  #add column for rockname
-blk_cr1b <- bulk_data %>%
-  filter(grepl("CR1B", bulk_data$Comment)) %>%
+blk_cr1b <- bulk_data2 %>%
+  filter(grepl("CR1B", bulk_data2$Comment)) %>%
   mutate("RockName" = "CR1B")
-blk_cr2a_t <- bulk_data %>%
-  filter(grepl("CR2A_T", bulk_data$Comment)) %>%
-  mutate("RockName" = "CR2A_T")
-blk_cr2a_m <- bulk_data %>%
-  filter(grepl("CR2A_M", bulk_data$Comment)) %>%
+blk_cr2a<- bulk_data2 %>%
+  filter(grepl("CR2A", bulk_data2$Comment)) %>%
   mutate("RockName" = "CR2A")
-blk_cr2b <- bulk_data %>%
-  filter(grepl("CR2B", bulk_data$Comment)) %>%
+blk_cr2b <- bulk_data2 %>%
+  filter(grepl("CR2B", bulk_data2$Comment)) %>%
   mutate("RockName" = "CR2B")
-blk_cr3 <- bulk_data %>%
-  filter(grepl("CR3", bulk_data$Comment)) %>%
+blk_cr3 <- bulk_data2 %>%
+  filter(grepl("CR3", bulk_data2$Comment)) %>%
   mutate("RockName" = "CR3")
-blk_cr4 <- bulk_data %>%
-  filter(grepl("CR4", bulk_data$Comment)) %>%
+blk_cr4 <- bulk_data2 %>%
+  filter(grepl("CR4", bulk_data2$Comment)) %>%
   mutate("RockName" = "CR4")
-blk_cr5 <- bulk_data %>%
-  filter(grepl("COR5", bulk_data$Comment)) %>%
+blk_cr5 <- bulk_data2 %>%
+  filter(grepl("CR5", bulk_data2$Comment)) %>%
   mutate("RockName" = "CR5")
-blk_cr6 <- bulk_data %>%
-  filter(grepl("COR6", bulk_data$Comment)) %>%
+blk_cr6 <- bulk_data2 %>%
+  filter(grepl("CR6", bulk_data2$Comment)) %>%
   mutate("RockName" = "CR6")
-blk_cr7 <- bulk_data %>%
-  filter(grepl("CR7", bulk_data$Comment)) %>%
+blk_cr7 <- bulk_data2 %>%
+  filter(grepl("CR7", bulk_data2$Comment)) %>%
   mutate("RockName" = "CR7")
-blk_data <- rbind(blk_cr1a, blk_cr1b, blk_cr2a_m, blk_cr2b, blk_cr3, blk_cr4, blk_cr5, blk_cr6, blk_cr7) #pull all df's together w/ 1 col for rockname
-blk_data <- blk_data[,c(29, 23, 2:15)] #reorder the columns and limit to relevant ones
-blk_data <- blk_data %>%  #add column w/ Mg# calculated
+blk_data3 <- rbind(blk_cr1a, blk_cr1b, blk_cr2a, blk_cr2b, blk_cr3, blk_cr4, blk_cr5, blk_cr6, blk_cr7) #pull all df's together w/ 1 col for rockname
+blk_data3 <- blk_data3[,c(30, 24, 2:16)] #reorder the columns and limit to relevant ones
+blk_data3 <- blk_data3 %>%  #add column w/ Mg# calculated
   mutate("MgN" = ((MgO / (40.31)) / ((MgO / (40.31)) + (FeO / (71.85)))) * (100))
-blk_data$RockName <- as.factor(blk_data$RockName) #coerce col to factor (I forget why this was needed)
+blk_data3$RockName <- as.factor(blk_data3$RockName) #coerce col to factor (I forget why this was needed)
 
 
-blk_data_wt <- blk_data %>%
+blk_data_wt <- blk_data3 %>%
   select("RockName":"Total", "MgN") %>%  #choose relevant columns
   filter(Total > 98.0 & Total < 101.0) #select rows based on Total constraints
 #leave off last line of this due to bulk not requiring as many constraints as glass

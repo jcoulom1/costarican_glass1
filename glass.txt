@@ -82,3 +82,5 @@ error bar plots also added to glass script
 
 updated r.script to condense code with plot_symbols and theme - streamlined
 
+added more data points for CR7
+

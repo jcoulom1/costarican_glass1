@@ -11,7 +11,7 @@ library(gridExtra)
 library(data.table)
 library(huxtable)
 library(kableExtra)
-library(wrtiexl)
+library(writexl)
 
 plot_symbols <- list(
   scale_shape_manual(values = c(7, 8, 10, 11, 21:25)),
@@ -82,15 +82,8 @@ alkali_plot <- ggplot(rock_data_wt, aes(x = SiO2, y = Na2O + K2O)) +
   facet_wrap(vars(RockName)) + 
   geom_point(aes(shape = RockName, color = RockName)) +
   labs(title = "Silice vs Alkali", x = "SiO2, Wt%", y = "Na2O + K2O, Wt%") +
-  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)) + 
-  scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
-                                "blue2", "deeppink2", "orchid3", 
-                                "royalblue4", "firebrick3", "cyan3")) +
-  guides(color = guide_legend(override.aes = list(size = 5))) +
-  theme(text = element_text(size = 15),
-        legend.key.size = unit(1.0, "cm"),
-        legend.title = element_text(size = 14),
-        plot.title = element_text(hjust = 0.5))
+  plot_symbols +
+  plot_theme
 alkali_plot
 
 ##plot si vs mg
