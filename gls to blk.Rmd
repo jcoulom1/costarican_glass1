@@ -1,0 +1,289 @@
+---
+title: "Comparision of glass and bulk rock"
+author: "Julie M. Coulombe"
+date:  "`r format(Sys.time(), '%B %d, %Y')`"
+output: word_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+bulk_data <- read.csv("data/bulk_comp_data_a.csv")
+bulk_data2 <- read.csv("data/bulk_fused_sept.csv")
+cr_data <- read.csv("data/wt%_probe_data.csv")
+library(dbplyr)
+library(tidyverse)
+library(gridExtra)
+library(data.table)
+library(captioner)
+library(furniture)
+library(ggpubr)
+library(huxtable)
+library(flextable)
+options(warn = 2)
+```
+
+
+```{r plot setup, include = FALSE}
+plot_symbols <- list(
+  scale_shape_manual(values = c(7, 8, 10, 11, 21:25)),
+    scale_color_manual(values = c("coral1", "chartreuse3", "peachpuff4",
+                                  "blue2", "deeppink2", "orchid3",
+                                  "royalblue4", "firebrick3", "cyan3"))
+)
+plot_theme <- list(
+  guides(color = guide_legend(override.aes = list(size = 5))), 
+    theme(text = element_text(size = 15),
+          legend.key.size = unit(1.0, "cm"),
+          legend.title = element_text(size = 14),
+          plot.title = element_text(hjust = 0.5))
+)
+```
+
+
+```{r selection, include=FALSE}
+rock_cr1a <- cr_data %>%
+   filter(grepl("CR1A", cr_data$Comment)) %>%
+  mutate("RockName" = "CR1A")
+rock_cr1b <- cr_data %>%
+  filter(grepl("CR1B", cr_data$Comment)) %>%
+  mutate("RockName" = "CR1B")
+rock_cr2a <- cr_data %>%
+  filter(grepl("CR2A", cr_data$Comment)) %>%
+  mutate("RockName" = "CR2A")
+rock_cr2b <- cr_data %>%
+  filter(grepl("CR2B", cr_data$Comment)) %>%
+  mutate("RockName" = "CR2B")
+rock_cr3 <- cr_data %>%
+  filter(grepl("CR3", cr_data$Comment)) %>%
+  mutate("RockName" = "CR3")
+rock_cr4 <- cr_data %>%
+  filter(grepl("CR4", cr_data$Comment)) %>%
+  mutate("RockName" = "CR4")
+rock_cr5 <- cr_data %>%
+  filter(grepl("CR5", cr_data$Comment)) %>%
+  mutate("RockName" = "CR5")
+rock_cr6 <- cr_data %>%
+  filter(grepl("CR6", cr_data$Comment)) %>%
+  mutate("RockName" = "CR6")
+rock_cr7 <- cr_data %>%
+  filter(grepl("CR7", cr_data$Comment)) %>%
+  mutate("RockName" = "CR7")
+rock_data <- rbind(rock_cr1a, rock_cr1b, rock_cr2a, rock_cr2b, rock_cr3, rock_cr4, rock_cr5, rock_cr6, rock_cr7)
+rock_data <- rock_data[,c(30, 24, 2:16)]
+rock_data <- rock_data %>%
+  mutate("MgN" = ((MgO / (40.31)) / ((MgO / (40.31)) + (FeO / (71.85)))) * (100))
+rock_data$RockName <- as.factor(rock_data$RockName)
+```
+
+```{r bulk selection, include = FALSE}
+bulk_data$Comment <- as.character(bulk_data$Comment)
+blk_cr1a <- bulk_data %>%
+  filter(grepl("CRA1A", bulk_data$Comment)) %>% 
+  mutate("RockName" = "CR1A") 
+blk_cr1b <- bulk_data2 %>%
+  filter(grepl("CR1B", bulk_data2$Comment)) %>%
+  mutate("RockName" = "CR1B")
+blk_cr2a<- bulk_data2 %>%
+  filter(grepl("CR2A", bulk_data2$Comment)) %>%
+  mutate("RockName" = "CR2A")
+blk_cr2b <- bulk_data2 %>%
+  filter(grepl("CR2B", bulk_data2$Comment)) %>%
+  mutate("RockName" = "CR2B")
+blk_cr3 <- bulk_data2 %>%
+  filter(grepl("CR3", bulk_data2$Comment)) %>%
+  mutate("RockName" = "CR3")
+blk_cr4 <- bulk_data2 %>%
+  filter(grepl("CR4", bulk_data2$Comment)) %>%
+  mutate("RockName" = "CR4")
+blk_cr5 <- bulk_data2 %>%
+  filter(grepl("CR5", bulk_data2$Comment)) %>%
+  mutate("RockName" = "CR5")
+blk_cr6 <- bulk_data2 %>%
+  filter(grepl("CR6", bulk_data2$Comment)) %>%
+  mutate("RockName" = "CR6")
+blk_cr7 <- bulk_data2 %>%
+  filter(grepl("CR7", bulk_data2$Comment)) %>%
+  mutate("RockName" = "CR7")
+```
+
+```{r data constraints, include = FALSE}
+rock_data_wt <- rock_data %>%
+  select("RockName":"Total", "MgN") %>% 
+  filter(Total > 95.0 & Total < 101.0) %>% 
+  filter(is.na(V2O3) & SiO2 < 90.0 & SiO2 > 40 & Al2O3 < 22.0 & Al2O3 > 10.0 & K2O > 1.0) 
+```
+
+```{r grp blk rocks together, include=FALSE}
+blk_data3 <- rbind(blk_cr1a, blk_cr1b, blk_cr2a, blk_cr2b, blk_cr3, blk_cr4, blk_cr5, blk_cr6, blk_cr7)
+blk_data3 <- blk_data3[,c(30, 24, 2:16)] 
+blk_data3 <- blk_data3 %>%  
+  mutate("MgN" = ((MgO / (40.31)) / ((MgO / (40.31)) + (FeO / (71.85)))) * (100))
+blk_data3$RockName <- as.factor(blk_data3$RockName)
+```
+
+
+```{r blk data constraints, include = FALSE}
+blk_data_wt <- blk_data3 %>%
+  select("RockName":"Total", "MgN") %>%
+  filter(Total > 98.0 & Total < 101.0) %>%
+  filter(SiO2 > 40.0)
+```
+
+
+
+
+```{r tas template, include = FALSE, fig.dim = c(10,5)}
+d = data.frame(x = c(40, 80), y = c(0,15))
+theme_set(theme_bw(base_size=28))
+#makes the TAS template
+p <- ggplot(data=d, mapping=aes(x=x, y=y)) +
+  geom_blank() +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) +
+  scale_y_continuous(limits=c(0,15), expand = c(0, 0)) + 
+  scale_x_continuous(limits=c(40,85), expand = c(0, 0)) +
+  labs(y=expression(Na[2]*O + K[2]*O*~ wt~'%'), x=expression(SiO[2]*~ wt~'%'))+
+  annotate("segment", x=45, xend=45, y=1, yend=5)+
+  annotate("segment", x=45, xend=52, y=5, yend=5)+
+  annotate("segment", x=52, xend=69, y=5, yend=8)+
+  annotate("segment", x=76.5, xend=69, y=1, yend=8)+
+  annotate("segment", x=69, xend=69, y=8, yend=13)+
+  annotate("segment", x=45, xend=61.32, y=5, yend=13.7)+
+  annotate("segment", x=52, xend=52, y=1, yend=5)+
+  annotate("segment", x=57, xend=57, y=1, yend=5.9)+
+  annotate("segment", x=63, xend=63, y=1, yend=6.9)+
+  annotate("segment", x=52, xend=49.4, y=5, yend=7.3)+
+  annotate("segment", x=57, xend=53.05, y=5.9, yend=9.25)+
+  annotate("segment", x=63, xend=57.6, y=6.9, yend=11.7)+
+  annotate("segment", x=41, xend=45, y=3, yend=3)+
+  annotate("segment", x=41, xend=41, y=1, yend=3)+
+  annotate("segment", x=41, xend=41, y=3, yend=7, linetype="dashed")+
+  annotate("segment", x=41, xend=45, y=7, yend=9.4, linetype="dashed")+
+  annotate("segment", x=45, xend=52.5, y=9.4, yend=14)+
+  annotate("segment", x=49.4, xend=45, y=7.3, yend=9.4)+
+  annotate("segment", x=53, xend=48.4, y=9.3, yend=11.5)+
+  annotate("segment", x=57.6, xend=50.3, y=11.7, yend=15)
+```
+
+
+```{r template with labels, echo = FALSE, fig.dim = c(10,5)}
+tas <- p + annotate("text", label = "Basalt", x = 48.5, y = 2, size=4)+
+  annotate("text", label = "Basaltic\n andesite", x = 54.3, y = 3.0, size=4)+
+  annotate("text", label = "Andesite", x = 60, y = 3.5, size=4)+
+  annotate("text", label = "Dacite", x = 67.5, y = 4.2, size=4)+
+  annotate("text", label = "Rhyolite", x = 75, y = 7, size=4)+
+  annotate("text", label = "Trachy- \n basalt", x = 48.8, y = 5.7, size=4)+
+  annotate("text", label = "Basaltic \n trachy- \n andesite", x = 53, y = 7, size=4)+
+  annotate("text", label = "Trachy- \n andesite", x = 57.8, y = 8.2, size=4)+
+  annotate("text", label = "Trachydacite", x = 65, y = 9, size=4)+
+  annotate("text", label = "Trachyte", x = 62.5, y = 11.5, size=4)+
+  annotate("text", label = "Picro- \n basalt", x = 43, y = 1.5, size=4)+
+  annotate("text", label = "Basanite \n (Ol > 10%)", x = 43.7, y = 6, size=4)+
+  annotate("text", label = "Tephrite \n (Ol < 10%)", x = 45, y = 7.8, size=4)+
+  annotate("text", label = "Phono- \n tephrite", x = 48.5, y = 9.5, size=4)+
+  annotate("text", label = "Tephri- \n phonolite", x = 52.5, y = 11.5, size=4)+
+  annotate("text", label = "Phonolite", x = 57, y = 14, size=4)+
+  annotate("text", label = "Foidite", x = 45, y = 12, size=4)
+```
+
+
+
+```{r bulk avg sd table, include=FALSE, fig.dim = c(10,7)}                              
+blk_avg_sd <- blk_data_wt %>%
+  group_by(RockName) %>%
+  summarise("SiO2 m" = mean(SiO2), "SiO2 sd" = sd(SiO2),
+            "TiO2 m" = mean(TiO2), "TiO2 sd" = sd(TiO2),
+            "Al2O3 m" = mean(Al2O3), "Al2O3 sd" = sd(Al2O3),
+            "Cr m" = mean(Cr2O3), "Cr sd" = sd(Cr2O3),
+            "MgO m" = mean(MgO), "MgO sd" = sd(MgO),
+            "CaO m" = mean(CaO), "CaO sd" = sd(CaO),
+            "MnO m" = mean(MnO), "MnO sd" = sd(MnO),
+            "FeO m" = mean(FeO), "FeO sd" = sd(FeO),
+            "Na2O m" = mean(Na2O), "Na2O sd" = sd(Na2O),
+            "K2O m" = mean(K2O), "K2O sd" = sd(K2O),
+            "S m" = mean(S), "S sd" = sd(S),
+            "P2O5 m" = mean(P2O5), "P2O5 sd" = sd(P2O5),
+            "MgN m" = mean(MgN), "MgN sd" = sd(MgN),
+            "Total m" = mean(Total), "Total sd" = sd(Total), .groups = "keep")
+blk_avg_sd <- as.data.frame(blk_avg_sd)
+  
+```
+
+```{r blk_avg table, include=FALSE, fig.dim=c(10,7)}
+blk_avg <- blk_data_wt %>%
+  group_by(RockName) %>%
+  summarise("SiO2" = mean(SiO2), "TiO2" = mean(TiO2),
+            "Al2O3" = mean(Al2O3), "Cr" = mean(Cr2O3),
+            "MgO" = mean(MgO), "CaO" = mean(CaO), "MnO" = mean(MnO),
+            "FeO" = mean(FeO), "Na2O" = mean(Na2O), "K2O" = mean(K2O),
+            "S" = mean(S), "P2O5" = mean(P2O5), "MgN" = mean(MgN),
+            "Total" = mean(Total), .groups = "keep")
+blk_avg <- as_tibble(blk_avg)
+```
+
+
+```{r overlay, echo = FALSE, fig.dim = c(10,7)}
+tas +
+  geom_point(data = blk_avg, mapping = aes(x = SiO2, y = Na2O + K2O, shape = RockName, fill = "yellow", stroke = 2, color = RockName)) +
+  geom_point(data = rock_data_wt, mapping = aes(x = SiO2, y = Na2O + K2O, shape = RockName, color = RockName) +
+  plot_symbols + 
+  plot_theme
+```
+
+
+```{r combo mg, echo=FALSE, fig.dim=c(10,7)}
+mg_combo_plot <- ggplot(NULL, aes(SiO2, MgN, shape = RockName, color = RockName)) +
+  geom_point(data = blk_avg, stroke = 2, fill = "yellow") +
+  geom_point(data = rock_data_wt, size = 3) +
+  plot_symbols +
+  plot_theme
+mg_combo_plot
+```
+
+
+```{r combo fe, echo=FALSE, fig.dim=c(10,7)}
+fe_combo_plot <- ggplot(NULL, aes(SiO2, FeO, shape = RockName, color = RockName)) +
+  geom_point(data = blk_avg, stroke = 2, fill = "yellow") +
+  geom_point(data = rock_data_wt, size = 3) +
+  plot_symbols +
+  plot_theme
+fe_combo_plot
+```
+
+```{r combo ca, echo=FALSE, fig.dim = c(10,7)}
+ca_combo_plot <- ggplot(NULL, aes(SiO2, CaO, shape = RockName, color = RockName)) +
+  geom_point(data = blk_avg, stroke = 2, fill = "yellow") +
+  geom_point(data = rock_data_wt, size = 3) +
+  plot_symbols +
+  plot_theme
+ca_combo_plot
+```
+
+```{r combo k, echo=FALSE, fig.dim=c(10,7)}
+k_combo_plot <- ggplot(NULL, aes(SiO2, K2O, shape = RockName, color = RockName)) +
+  geom_point(data = blk_avg, stroke = 2, fill = "yellow") +
+  geom_point(data = rock_data_wt, size = 3) +
+  plot_symbols +
+  plot_theme
+k_combo_plot
+```
+
+```{r combo ti, echo=FALSE, fig.dim=c(10,7)}
+ti_combo_plot <- ggplot(NULL, aes(SiO2, TiO2, shape = RockName, color = RockName)) +
+  geom_point(data = blk_avg, stroke = 2, fill = "yellow") +
+  geom_point(data = rock_data_wt, size = 3) +
+  plot_symbols +
+  plot_theme
+ti_combo_plot
+```
+
+```{r combo al, echo=FALSE, fig.dim=c(10,7)}
+al_combo_plot <- ggplot(NULL, aes(SiO2, Al2O3, shape = RockName, color = RockName)) +
+  geom_point(data = blk_avg, stroke = 2, fill = "yellow") +
+  geom_point(data = rock_data_wt, size = 3) +
+  plot_symbols +
+  plot_theme
+al_combo_plot
+```
+

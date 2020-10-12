@@ -338,7 +338,7 @@ gls_avg <- rock_data_wt %>%
             "MgO" = mean(MgO), "CaO" = mean(CaO), "MnO" = mean(MnO),
             "FeO" = mean(FeO), "Na2O" = mean(Na2O), "K2O" = mean(K2O),
             "S" = mean(S), "P2O5" = mean(P2O5), "MgN" = mean(MgN),
-            "Total" = mean(Total))
+            "Total" = mean(Total), .groups = "keep")
 ```
 
 ```{r glass avg alk, echo = FALSE, fig.dim = c(10,7)}
